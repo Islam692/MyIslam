@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_quran"
+        android:icon="@drawable/quran"
+        android:title="@string/quran"
+        app:showAsAction="withText" />
+    <item
+        android:id="@+id/navigation_hadeth"
+        android:icon="@drawable/hadeth"
+        android:title="@string/hadeth"
+        app:showAsAction="withText" />
+    <item
+        android:id="@+id/navigation_tasbeh"
+        android:icon="@drawable/sebha"
+        android:title="@string/sebha"
+        app:showAsAction="withText" />
+    <item
+        android:id="@+id/navigation_radio"
+        android:icon="@drawable/radio"
+        android:title="@string/radio"
+        app:showAsAction="withText" />
+</menu>
