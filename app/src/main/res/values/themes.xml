@@ -7,6 +7,10 @@
         <item name="cardBackgroundColor">#080A0B</item>
     </style>
 
+    <style name="MyTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/dthullth_ii_1</item>
+    </style>
+
 
     <style name="Theme.MyIslam" parent="Base.Theme.MyIslam" />
 </resources>

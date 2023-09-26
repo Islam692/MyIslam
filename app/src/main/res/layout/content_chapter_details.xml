@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
+    android:layout_margin="2dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_chapter_details">
 
@@ -12,12 +12,12 @@
         android:id="@+id/sura_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="4dp"
-        android:fontFamily="@font/ge_ss_two_bold"
-        android:gravity="center"
+        android:layout_marginVertical="2dp"
+        android:fontFamily="@font/dthullth_ii_1"
         android:text="الْفَاتِحَةِ"
         android:textColor="#DCB486"
-        android:textSize="30sp"
+        android:gravity="center"
+        android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,53 +27,23 @@
         android:id="@+id/sura_play"
         android:layout_width="40sp"
         android:layout_height="40dp"
+        android:layout_marginStart="2dp"
         android:src="@drawable/baseline_play_arrow_24"
         app:layout_constraintBottom_toBottomOf="@+id/sura_name"
         app:layout_constraintStart_toEndOf="@id/sura_name"
         app:layout_constraintTop_toTopOf="@id/sura_name" />
 
     <TextView
-        android:id="@+id/sura_counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:layout_marginEnd="20dp"
-        android:fontFamily="@font/ge_ss_two_bold"
-        android:text="عدد اياتها"
-        android:textColor="#DCB486"
-        android:textSize="21sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/sura_name"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/sura_countern"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:layout_marginEnd="10dp"
-        android:fontFamily="@font/ge_ss_two_bold"
-        android:text="7"
-        android:textColor="#DCB486"
-        android:textSize="21sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/sura_counter"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/sura_fehres"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="50dp"
-        android:layout_marginStart="50dp"
         android:fontFamily="@font/ge_ss_two_bold"
-        android:text="رقمها"
+        android:text="رقم السورة"
         android:textColor="#DCB486"
         android:textSize="21sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -81,55 +51,81 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="50dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginEnd="10dp"
         android:fontFamily="@font/ge_ss_two_bold"
         android:text="1"
         android:textColor="#DCB486"
         android:textSize="21sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/sura_play"
+        app:layout_constraintEnd_toStartOf="@id/sura_fehres"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sura_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="50dp"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/ge_ss_two_bold"
+        android:text="عدد الآيات"
+        android:textColor="#DCB486"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/sura_countern"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sura_countern"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="50dp"
+        android:fontFamily="@font/ge_ss_two_bold"
+        android:text="7"
+        android:textColor="#DCB486"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/view"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/view"
-        android:layout_width="355dp"
+        android:layout_width="wrap_content"
         android:layout_height="2dp"
         android:layout_marginVertical="2dp"
         android:background="#DCB486"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sura_fehresn" />
+        app:layout_constraintTop_toBottomOf="@id/sura_countern" />
 
     <TextView
         android:id="@+id/basmala"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:textColor="#DCB486"
-        android:gravity="center"
-        android:text="بسم الله الرحمن الرحيم"
-        android:letterSpacing=".3"
+        android:layout_marginVertical="2dp"
         android:fontFamily="@font/dthullth_ii_1"
-        android:background="@drawable/text_bg"
-        android:layout_marginVertical="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view"
+        android:gravity="center"
+        android:letterSpacing=".1"
+        android:text="بسم الله الرحمن الرحيم"
+        android:textColor="#DCB486"
+        android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/card_view"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginVertical="4dp"
-        android:backgroundTint="#332C3D4A"
+        android:backgroundTint="#00DCB486"
         android:elevation="24dp"
         app:cardCornerRadius="24dp"
         app:contentPadding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".8"
+        app:layout_constraintHeight_percent=".7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/basmala"
         app:layout_constraintWidth_percent="1">
