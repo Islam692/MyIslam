@@ -3,21 +3,22 @@ package com.example.myislam.home
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
-import android.view.WindowManager
 import android.view.WindowManager.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.myislam.R
 import com.example.myislam.databinding.ActivityHomeBinding
 import com.example.myislam.hadeth.HadethFragment
+import com.example.myislam.suna.SunaFragment
 import com.example.myislam.quran.QuranFragment
 import com.example.myislam.radio.RadioFragment
+import com.example.myislam.settings.SettingsFragment
 import com.example.myislam.tasbeh.TasbehFragment
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 
 
 class HomeActivity : AppCompatActivity() {
-    lateinit var viewBinding :ActivityHomeBinding
+    lateinit var viewBinding: ActivityHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityHomeBinding.inflate(layoutInflater)
@@ -39,11 +40,19 @@ class HomeActivity : AppCompatActivity() {
                 R.id.navigation_radio -> {
                     showTabFragment(RadioFragment())
                 }
+
+                R.id.navigation_suna -> {
+                    showTabFragment(SunaFragment())
+                }
+            }
+            viewBinding.imgSettings.setOnClickListener {
+                showTabFragment(SettingsFragment())
             }
             true
         }
         viewBinding.content.bottomNav.selectedItemId = com.example.myislam.R.id.navigation_quran
-        viewBinding.content.bottomNav.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+        viewBinding.content.bottomNav.labelVisibilityMode =
+            LabelVisibilityMode.LABEL_VISIBILITY_LABELED
         if (Build.VERSION.SDK_INT >= 21) {
             val window = this.window
             window.addFlags(LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -52,9 +61,16 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
-    private fun showTabFragment(fragment: Fragment){
-        supportFragmentManager.beginTransaction().replace(com.example.myislam.R.id.fragment_container,fragment).commit()
+
+    private fun showTabFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().setCustomAnimations(
+            androidx.appcompat.R.anim.abc_fade_in,
+            androidx.appcompat.R.anim.abc_fade_out
+        )
+            .replace(com.example.myislam.R.id.fragment_container, fragment)
+            .commit()
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu items for use in the action bar
         val inflater = menuInflater

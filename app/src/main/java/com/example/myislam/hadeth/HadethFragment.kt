@@ -26,6 +26,7 @@ class HadethFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        loadhadethfile()
     }
 
     lateinit var adapter: HadethRecyclerAdapter
@@ -46,7 +47,6 @@ class HadethFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        loadhadethfile()
         bindHadethList()
     }
 

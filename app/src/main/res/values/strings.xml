@@ -3,5 +3,13 @@
     <string name="quran" translatable="true">الْقُرْآنِ الْكَرِيمِ</string>
     <string name="hadeth" translatable="true">الْأَحَادِيث</string>
     <string name="sebha" translatable="true">السُّبْحَة</string>
-    <string name="radio">الْإِذَاعَة</string>
+    <string name="radio" translatable="true">الْإِذَاعَة</string>
+    <string name="suna" translatable="true">السُّنَّة</string>
+    <string name="changelanguage" translatable="false">تغير اللغة</string>
+    <string name="darkmode">الوضع الليلى</string>
+    <string name="sunahadeth">قال ﷺ (فيما رواه الترمزى وصححه الألبانى)</string>
+    <string name="hadethforsuna">«مَن صلَّى ثِنتَي عشرةَ رَكْعةً ، في يومٍ وليلةٍ ، بنَى اللَّهُ لَه بيتًا في الجنَّةِ»</string>
+    <string name="infoforsuna">أربع قبل الظهر وركعتين بعدها وركعتين بعد المغرب وركعتين بعد العشاء وركعتين قبل الفجر.</string>
+    <string name="radio_player_channel">Radio channel</string>
+    <string name="radio_player_description">this channel to display radio player</string>
 </resources>

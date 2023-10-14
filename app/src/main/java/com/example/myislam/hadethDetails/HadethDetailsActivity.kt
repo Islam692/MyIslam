@@ -12,8 +12,8 @@ import com.example.myislam.model.Hadeth
 
 class HadethDetailsActivity : AppCompatActivity() {
     lateinit var viewBinding: ActivityHadethDetailsBinding
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         viewBinding = ActivityHadethDetailsBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
         initViews()
@@ -25,11 +25,15 @@ class HadethDetailsActivity : AppCompatActivity() {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.statusBarColor = this.resources.getColor(R.color.colorr)
         }
+
+        fun onCreate(savedInstanceState : Bundle?, persistentState: PersistableBundle?){
+            super.onCreate(savedInstanceState,persistentState)
+        }
     }
 
     private fun initViews() {
         setSupportActionBar(viewBinding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = null
     }

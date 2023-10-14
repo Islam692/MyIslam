@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/navigation_quran"
-        android:icon="@drawable/quran"
-        android:title="@string/quran"
-        />
+        android:id="@+id/navigation_suna"
+        android:icon="@drawable/nwafel"
+        android:checked="false"
+        android:title="@string/suna" />
+
     <item
         android:id="@+id/navigation_hadeth"
         android:icon="@drawable/hadeth"
+        android:checked="false"
         android:title="@string/hadeth" />
+    <item
+        android:id="@+id/navigation_quran"
+        android:checked="true"
+        android:icon="@drawable/quran"
+        android:title="@string/quran" />
+
     <item
         android:id="@+id/navigation_tasbeh"
         android:icon="@drawable/sebha"
+        android:checked="false"
         android:title="@string/sebha" />
+
     <item
         android:id="@+id/navigation_radio"
         android:icon="@drawable/radio"
+        android:checked="false"
         android:title="@string/radio" />
 </menu>

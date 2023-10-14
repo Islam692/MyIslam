@@ -22,8 +22,7 @@ class SplashScreen : AppCompatActivity() {
         var mediaplayer = MediaPlayer.create(applicationContext, R.raw.quran)
         mediaplayer.start()
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this@SplashScreen, HomeActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this@SplashScreen, HomeActivity::class.java))
             finish()
         },7000)
         if (Build.VERSION.SDK_INT >= 21) {

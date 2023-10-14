@@ -8,4 +8,5 @@ object Constance {
     const val EXTRA_CHAPTER_TYPE = "type"
 
     const val EXTRA_HADETH = "hadeth"
+    var BASE_URL = "https://mp3quran.net/api/v3/"
 }
