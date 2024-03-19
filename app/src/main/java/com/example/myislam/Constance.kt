@@ -5,4 +5,6 @@ object Constance {
     const val EXTRA_CHAPTER_NAME = "name"
     const val EXTRA_CHAPTER_NUMBER = "number"
     const val EXTRA_CHAPTER_COUNTER = "counter"
+
+    const val EXTRA_HADETH = "hadeth"
 }
