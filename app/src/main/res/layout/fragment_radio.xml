@@ -40,6 +40,19 @@
         android:src="@drawable/baseline_play_arrow_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/izaa_tv"
+        app:tint="@color/light_orange" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loading_progress"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/light_orange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/izaa_tv" />
 
     <ImageView
@@ -54,6 +67,7 @@
         app:layout_constraintTop_toBottomOf="@id/izaa_tv" />
 
     <ImageView
+        android:id="@+id/previous"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="37dp"
