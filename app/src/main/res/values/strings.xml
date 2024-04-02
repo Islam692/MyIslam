@@ -4,4 +4,5 @@
     <string name="hadeth" formatted="true">Hadeth</string>
     <string name="sebha">Sebha</string>
     <string name="radio">Radio</string>
+    <string name="radio_default_title">Islami Radio Player</string>
 </resources>

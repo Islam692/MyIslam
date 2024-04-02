@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +33,11 @@
         <!--                <action android:name="android.media.browse.MediaBrowserService" />-->
         <!--            </intent-filter>-->
         <!--        </service>-->
+
+        <service
+            android:name=".radio.RadioService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
         <activity
             android:name=".home.HomeActivity"
