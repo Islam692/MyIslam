@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.myislam.Constance
+import com.example.myislam.Constants
 import com.example.myislam.databinding.FragmentHadethBinding
 import com.example.myislam.hadethDetails.HadethDetailsActivity
 import com.example.myislam.model.Hadeth
@@ -45,7 +45,7 @@ class HadethFragment : Fragment() {
 
     private fun showHadethDetails(hadeth: Hadeth) {
         val intent = Intent(context, HadethDetailsActivity::class.java)
-        intent.putExtra(Constance.EXTRA_HADETH, hadeth)
+        intent.putExtra(Constants.EXTRA_HADETH, hadeth)
         startActivity(intent)
     }
 

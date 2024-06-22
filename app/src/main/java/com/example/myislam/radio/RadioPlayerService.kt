@@ -17,7 +17,7 @@ import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import com.example.myislam.Constance
+import com.example.myislam.Constants
 import com.example.myislam.R
 import com.example.myislam.api.ApiManager
 import com.example.myislam.api.Radio
@@ -35,8 +35,9 @@ const val PREVIOUS_ACTION = 3
 const val CLOSE_ACTION = 4
 const val CHANNEL_ID = "RadioFragChannelId"
 const val CHANNEL_NAME = "Radio Media Playback"
+const val LOGGING_TAG = "RadioService"
 
-class RadioService : Service() {
+class RadioPlayerService : Service() {
 
     private lateinit var customContentRV: RemoteViews
     private var _mediaPlayer: MediaPlayer? = null
@@ -46,18 +47,27 @@ class RadioService : Service() {
     private var currentlyPlaying = false
     private var currentRadioIndex = 0
 
+    inner class LocalBinder : Binder() {
+        fun getService(): RadioPlayerService {
+            return this@RadioPlayerService
+        }
+    }
+
     private val iBinder: IBinder = LocalBinder()
+
+    override fun onBind(intent: Intent?): IBinder = iBinder
+
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        Log.d("tt", "service started")
+        Log.d(LOGGING_TAG, "radio service started")
         intent?.getIntExtra(CLICK_ACTION, -1)?.let { clickAction ->
             when (clickAction) {
                 PLAY_ACTION -> playOrPauseRadio()
                 NEXT_ACTION -> playNextRadio()
                 PREVIOUS_ACTION -> playPreviousRadio()
                 CLOSE_ACTION -> stopService()
-                else -> Log.d("tt", "unknown action $clickAction")
+                else -> Log.d(LOGGING_TAG, "unknown action with code $clickAction")
             }
         }
 
@@ -71,7 +81,7 @@ class RadioService : Service() {
     override fun onCreate() {
         super.onCreate()
         // initialization
-        Log.d("tt", "service created")
+        Log.d(LOGGING_TAG, "radio service created")
 
         startForegroundServiceWithNotification()
 
@@ -146,7 +156,7 @@ class RadioService : Service() {
         viewId: Int,
         actionCode: Int
     ) {
-        val actionIntent = Intent(context, RadioService::class.java).apply {
+        val actionIntent = Intent(context, RadioPlayerService::class.java).apply {
             putExtra(CLICK_ACTION, actionCode)
         }
 
@@ -182,7 +192,7 @@ class RadioService : Service() {
     }
 
     private fun RemoteViews.togglePlayingStatus(currentlyPlaying: Boolean) {
-        this@RadioService.currentlyPlaying = currentlyPlaying
+        this@RadioPlayerService.currentlyPlaying = currentlyPlaying
         val resId = if (currentlyPlaying) R.drawable.baseline_play_arrow_24 else R.drawable.ic_pause
         this.setImageViewResource(R.id.notification_play, resId)
 
@@ -192,15 +202,13 @@ class RadioService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d(LOGGING_TAG, "radio service destroyed")
         // releasing resources
-        Log.d("tt", "service destroyed")
+        mediaPlayer.release()
+        _mediaPlayer = null
     }
 
-    override fun onBind(intent: Intent?): IBinder {
-        return iBinder
-    }
-
-    private fun playOrPauseRadio() {
+    fun playOrPauseRadio() {
         if (!mediaPlayerAvailable) {
             Toast.makeText(this, "media player not available", Toast.LENGTH_SHORT)
                 .show()
@@ -209,32 +217,36 @@ class RadioService : Service() {
 
         if (currentlyPlaying) {
             mediaPlayer.pause()
+            radioMediaPlayerContract?.onPaused()
             customContentRV.togglePlayingStatus(false)
         } else {
             mediaPlayer.start()
+            radioMediaPlayerContract?.onPlayed()
             customContentRV.togglePlayingStatus(true)
         }
     }
 
-    private fun playPreviousRadio() {
+    fun playPreviousRadio() {
         mediaPlayerAvailable = false
         customContentRV.togglePlayingVisibility(false)
         customContentRV.togglePlayingStatus(false)
+        radioMediaPlayerContract?.onLoading()
 
         currentRadioIndex = if (currentRadioIndex == 0) radiosList.size - 1 else --currentRadioIndex
-        playRadioAtCurrentIndex()
+        playRadioAtCurrentIndex(false)
     }
 
-    private fun playNextRadio() {
+    fun playNextRadio() {
         mediaPlayerAvailable = false
         customContentRV.togglePlayingVisibility(false)
         customContentRV.togglePlayingStatus(false)
+        radioMediaPlayerContract?.onLoading()
 
         currentRadioIndex = if (currentRadioIndex == radiosList.size - 1) 0 else ++currentRadioIndex
-        playRadioAtCurrentIndex()
+        playRadioAtCurrentIndex(true)
     }
 
-    private fun playRadioAtCurrentIndex() {
+    private fun playRadioAtCurrentIndex(isPlayingNext: Boolean) {
         mediaPlayer.apply {
             reset()
             setDataSource(radiosList[currentRadioIndex].url)
@@ -247,6 +259,8 @@ class RadioService : Service() {
                 )
                 customContentRV.togglePlayingVisibility(true)
                 start()
+                if (isPlayingNext) radioMediaPlayerContract?.onNextPlayed()
+                else radioMediaPlayerContract?.onPreviousPlayed()
                 customContentRV.togglePlayingStatus(true)
             }
         }
@@ -255,8 +269,8 @@ class RadioService : Service() {
     }
 
     private fun getCurrentLanguageCode(): String {
-        return if (resources.configuration.locales[0].language == "ar") Constance.ARABIC_LANG_CODE
-        else Constance.ENGLISH_LANG_CODE
+        return if (resources.configuration.locales[0].language == "ar") Constants.ARABIC_LANG_CODE
+        else Constants.ENGLISH_LANG_CODE
     }
 
     private fun loadRadios() {
@@ -271,15 +285,17 @@ class RadioService : Service() {
                 ) {
                     if (response.isSuccessful) {
                         radiosList = response.body()?.radios ?: emptyList()
-                        Log.d("tt", "radios list ready")
                         if (_mediaPlayer == null) initMediaPlayer()
                     } else {
-                        Log.d("tt", "service error: ${response.errorBody().toString()}")
+                        Log.d(
+                            LOGGING_TAG,
+                            "radio service error: ${response.errorBody().toString()}"
+                        )
                     }
                 }
 
                 override fun onFailure(p0: Call<RadioResponse>, p1: Throwable) {
-                    Log.d("tt", p1.message ?: "service unknown error")
+                    Log.d(LOGGING_TAG, p1.message ?: "radio service unknown error")
                 }
             })
     }
@@ -298,19 +314,27 @@ class RadioService : Service() {
                 mediaPlayerAvailable = true
                 customContentRV.updateText(
                     R.id.notification_title,
-                    radiosList[currentRadioIndex].name
+                    name ?: radiosList[currentRadioIndex].name
                 )
                 customContentRV.togglePlayingVisibility(true)
-                start()
-                customContentRV.togglePlayingStatus(true)
+//                start()
+                customContentRV.togglePlayingStatus(false)
+                radioMediaPlayerContract?.onPaused()
             }
         }
     }
 
+    private var radioMediaPlayerContract: RadioMediaPlayerContract? = null
 
-    inner class LocalBinder : Binder() {
-        fun getService(): RadioService {
-            return this@RadioService
-        }
+    fun defineRadioMediaPlayerContract(contract: RadioMediaPlayerContract) {
+        radioMediaPlayerContract = contract
+    }
+
+    interface RadioMediaPlayerContract {
+        fun onPlayed()
+        fun onPaused()
+        fun onNextPlayed()
+        fun onPreviousPlayed()
+        fun onLoading()
     }
 }

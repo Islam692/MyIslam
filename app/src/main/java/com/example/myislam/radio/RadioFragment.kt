@@ -1,78 +1,65 @@
 package com.example.myislam.radio
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.example.myislam.Constance
+import com.example.myislam.Constants
 import com.example.myislam.R
 import com.example.myislam.databinding.FragmentRadioBinding
 
 
 class RadioFragment : Fragment() {
     private lateinit var binding: FragmentRadioBinding
-
-    //    private var _mediaPlayer: MediaPlayer? = null
-//    private val mediaPlayer: MediaPlayer get() = _mediaPlayer!!
-//    private var mediaPlayerAvailable = false
-//    private lateinit var radiosList: List<Radio>
-//    private var currentlyPlaying = false
-//    private var currentRadioIndex = 0
     private lateinit var sharedPreferences: SharedPreferences
 
-    private lateinit var radioService: RadioService
-    private var serviceBound = false
+    private lateinit var radioPlayerService: RadioPlayerService
+    private var isRadioPlayerServiceBound: Boolean = false
 
-//    private val connection = object : ServiceConnection {
-//        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-//            val binder = service as RadioService.LocalBinder
-//            radioService = binder.getService()
-//            serviceBound = true
-//        }
-//
-//        override fun onServiceDisconnected(name: ComponentName?) {
-//            serviceBound = false
-//        }
-//    }
+    private val radioPlayerServiceConnection = object : ServiceConnection {
+
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val binder = service as RadioPlayerService.LocalBinder
+            radioPlayerService = binder.getService()
+            isRadioPlayerServiceBound = true
+            defineRadioPlayerServiceContract()
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            isRadioPlayerServiceBound = false
+        }
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
-        Intent(requireContext(), RadioService::class.java).also { intent ->
+        Intent(requireContext(), RadioPlayerService::class.java).also { intent ->
             requireActivity().startForegroundService(intent)
-//            requireActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE)
+            requireActivity().bindService(
+                intent,
+                radioPlayerServiceConnection,
+                Context.BIND_AUTO_CREATE
+            )
         }
     }
 
-//    override fun onStop() {
-//        super.onStop()
-//        requireActivity().unbindService(connection)
-//        serviceBound = false
-//    }
-
-
-//    private fun isMyServiceRunning(): Boolean {
-//        val manager = getSystemService(requireContext(), ActivityManager::class.java)
-//        manager?.let {
-//            for (service in manager.getRunningServices(Int.MAX_VALUE)) {
-//                if (RadioService::class.java.getName() == service.service.className
-//                ) {
-//                    return true
-//                }
-//            }
-//        }
-//
-//        return false
-//    }
-
+    override fun onStop() {
+        super.onStop()
+        requireActivity().unbindService(radioPlayerServiceConnection)
+        isRadioPlayerServiceBound = false
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,16 +75,21 @@ class RadioFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sharedPreferences = requireActivity().getSharedPreferences(
-            Constance.SETTINGS_FILE_NAME,
+            Constants.SETTINGS_FILE_NAME,
             Context.MODE_PRIVATE
         )
 
-        retrieveSavedData()
+//        retrieveSavedData()
 
-        requireActivity().startForegroundService(Intent(requireContext(), RadioService::class.java))
+        requireActivity().startForegroundService(
+            Intent(
+                requireContext(),
+                RadioPlayerService::class.java
+            )
+        )
 
 
-        binding.play.setOnClickListener {
+//        binding.play.setOnClickListener {
 //            if (!mediaPlayerAvailable) {
 //                Toast.makeText(requireContext(), "media player not available", Toast.LENGTH_SHORT)
 //                    .show()
@@ -111,107 +103,75 @@ class RadioFragment : Fragment() {
 //                mediaPlayer.start()
 //                togglePlayingStatus(true)
 //            }
-        }
-
+//        }
+        binding.play.setOnClickListener { toggleRadioPlayer() }
         binding.next.setOnClickListener { playNextRadio() }
         binding.previous.setOnClickListener { playPreviousRadio() }
     }
 
-    private fun retrieveSavedData() {
-        val name =
-            sharedPreferences.getString(Constance.SAVED_RADIO_NAME, "إذاعـة القـرآن الـكـريـم")
-        val url: String = sharedPreferences.getString(Constance.SAVED_RADIO_URL, "") ?: ""
-        Log.d("tt", "name $name, url $url")
-//        if (url.isNotEmpty()) initMediaPlayer(name, url)
+    private fun defineRadioPlayerServiceContract() {
+        radioPlayerService.defineRadioMediaPlayerContract(object :
+            RadioPlayerService.RadioMediaPlayerContract {
+            override fun onPlayed() {
+                togglePlayingVisibility(true)
+                togglePlayingStatus(true)
+            }
+
+            override fun onPaused() {
+                togglePlayingVisibility(true)
+                togglePlayingStatus(false)
+            }
+
+            override fun onNextPlayed() {
+                togglePlayingVisibility(true)
+                togglePlayingStatus(true)
+            }
+
+            override fun onPreviousPlayed() {
+                togglePlayingVisibility(true)
+                togglePlayingStatus(true)
+            }
+
+            override fun onLoading() {
+                togglePlayingVisibility(false)
+            }
+        })
     }
 
-    private fun playPreviousRadio() {
-//        mediaPlayerAvailable = false
-        togglePlayingVisibility(false)
-        togglePlayingStatus(false)
+    private fun toggleRadioPlayer() {
+        if (isRadioPlayerServiceBound) {
+            radioPlayerService.playOrPauseRadio()
+        }
+    }
 
-//        currentRadioIndex = if (currentRadioIndex == 0) radiosList.size - 1 else --currentRadioIndex
-//        playRadioAtCurrentIndex()
+
+//    private fun retrieveSavedData() {
+//        val name =
+//            sharedPreferences.getString(Constance.SAVED_RADIO_NAME, "إذاعـة القـرآن الـكـريـم")
+//        val url: String = sharedPreferences.getString(Constance.SAVED_RADIO_URL, "") ?: ""
+//        Log.d("tt", "name $name, url $url")
+////        if (url.isNotEmpty()) initMediaPlayer(name, url)
+//    }
+
+    private fun playPreviousRadio() {
+        if (isRadioPlayerServiceBound) {
+            radioPlayerService.playPreviousRadio()
+            togglePlayingVisibility(false)
+            togglePlayingStatus(false)
+        }
     }
 
     private fun playNextRadio() {
-//        mediaPlayerAvailable = false
-        togglePlayingVisibility(false)
-        togglePlayingStatus(false)
-
-//        currentRadioIndex = if (currentRadioIndex == radiosList.size - 1) 0 else ++currentRadioIndex
-//        playRadioAtCurrentIndex()
+        if (isRadioPlayerServiceBound) {
+            radioPlayerService.playNextRadio()
+            togglePlayingVisibility(false)
+            togglePlayingStatus(false)
+        }
     }
 
-//    private fun playRadioAtCurrentIndex() {
-//        mediaPlayer.apply {
-//            reset()
-//            setDataSource(radiosList[currentRadioIndex].url)
-//            prepareAsync()
-//            setOnPreparedListener {
-//                mediaPlayerAvailable = true
-//                binding.izaaTv.text = radiosList[currentRadioIndex].name
-//                togglePlayingVisibility(true)
-//                start()
-//                togglePlayingStatus(true)
-//            }
-//        }
-//
-//        saveRadioData()
-//    }
-
-    private fun getCurrentLanguageCode(): String {
-        return if (resources.configuration.locales[0].language == "ar") Constance.ARABIC_LANG_CODE
-        else Constance.ENGLISH_LANG_CODE
-    }
-
-//    private fun loadRadios() {
-//        togglePlayingVisibility(false)
-//
-//        ApiManager.getRadiosService()
-//            .getRadios(language = getCurrentLanguageCode())
-//            .enqueue(object : Callback<RadioResponse> {
-//                override fun onResponse(
-//                    call: Call<RadioResponse>,
-//                    response: Response<RadioResponse>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        radiosList = response.body()?.radios ?: emptyList()
-//                        Log.d("tt", "radios list ready")
-//                        if (_mediaPlayer == null) initMediaPlayer()
-//                    } else {
-//                        Toast.makeText(
-//                            requireContext(),
-//                            "error occurred: ${response.errorBody().toString()}",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//
-//                override fun onFailure(p0: Call<RadioResponse>, p1: Throwable) {
-//                    Toast.makeText(requireContext(), p1.message, Toast.LENGTH_SHORT).show()
-//                }
-//            })
-//    }
-
-//    private fun initMediaPlayer(name: String? = null, url: String? = null) {
-//        _mediaPlayer = MediaPlayer().apply {
-//            setAudioAttributes(
-//                AudioAttributes.Builder()
-//                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//                    .setUsage(AudioAttributes.USAGE_MEDIA)
-//                    .build()
-//            )
-//            setDataSource(url ?: radiosList[currentRadioIndex].url)
-//            prepareAsync()
-//            setOnPreparedListener {
-//                mediaPlayerAvailable = true
-//                binding.izaaTv.text = name ?: radiosList[currentRadioIndex].name
-//                togglePlayingVisibility(true)
-//                start()
-//                togglePlayingStatus(true)
-//            }
-//        }
+//    private fun getCurrentLanguageCode(): String {
+//        return if (resources.configuration.locales[0].language == "ar") Constance.ARABIC_LANG_CODE
+//        else Constance.ENGLISH_LANG_CODE
 //    }
 
     private fun togglePlayingVisibility(playing: Boolean) {
@@ -220,16 +180,13 @@ class RadioFragment : Fragment() {
     }
 
     private fun togglePlayingStatus(currentlyPlaying: Boolean) {
-//        this.currentlyPlaying = currentlyPlaying
-        if (currentlyPlaying) binding.play.setImageResource(R.drawable.baseline_play_arrow_24)
-        else binding.play.setImageResource(R.drawable.ic_pause)
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        mediaPlayer.release()
-//        _mediaPlayer = null
+        if (currentlyPlaying) {
+            binding.play.setImageResource(R.drawable.ic_play_gold)
+            binding.play.scaleType = ImageView.ScaleType.CENTER
+        } else {
+            binding.play.setImageResource(R.drawable.ic_pause)
+            binding.play.scaleType = ImageView.ScaleType.CENTER_CROP
+        }
     }
 
 //    private fun saveRadioData() {

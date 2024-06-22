@@ -1,19 +1,20 @@
 package com.example.myislam.api
 
+import com.example.myislam.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiManager {
     private var retrofit: Retrofit? = null
 
-    fun getRadiosService(): RadiosService {
+    fun getRadiosService(): RadiosWebService {
         if (retrofit == null) {
             retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://mp3quran.net/api/v3/")
+                .baseUrl(Constants.RADIOS_WEB_API_URL)
                 .build()
         }
 
-        return retrofit!!.create(RadiosService::class.java)
+        return retrofit!!.create(RadiosWebService::class.java)
     }
 }
