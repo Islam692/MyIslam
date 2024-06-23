@@ -3,7 +3,7 @@ package com.example.myislam.radio
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myislam.api.model.Radio
+import com.example.myislam.api.Radio
 import com.example.myislam.databinding.ItemRadioBinding
 
 class RadioAdapter : RecyclerView.Adapter<RadioAdapter.ViewHolder>() {
