@@ -4,7 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myislam.Constance
+import com.example.myislam.Constants
 import com.example.myislam.R
 import com.example.myislam.databinding.ActivityHadethDetailsBinding
 import com.example.myislam.model.Hadeth
@@ -48,9 +48,9 @@ class HadethDetailsActivity : AppCompatActivity() {
     var hadeth: Hadeth? = null
     private fun initParams() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            hadeth = intent.getParcelableExtra(Constance.EXTRA_HADETH, Hadeth::class.java)
+            hadeth = intent.getParcelableExtra(Constants.EXTRA_HADETH, Hadeth::class.java)
         } else {
-            hadeth = intent.getParcelableExtra(Constance.EXTRA_HADETH) as Hadeth?
+            hadeth = intent.getParcelableExtra(Constants.EXTRA_HADETH) as Hadeth?
         }
     }
 }

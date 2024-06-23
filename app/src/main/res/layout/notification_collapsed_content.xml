@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:weightSum="6">
+
+    <TextView
+        android:id="@+id/notification_title"
+        style="@style/TextAppearance.Compat.Notification.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        tools:text="Media Title" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/notification_previous"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_skip_previous_24" />
+
+        <ImageView
+            android:id="@+id/notification_play"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:backgroundTint="@color/light_orange"
+            android:foregroundTint="@color/light_orange"
+            android:src="@drawable/baseline_play_arrow_24"
+            android:visibility="gone"
+            app:tint="@color/light_orange" />
+
+        <ProgressBar
+            android:id="@+id/notification_loading_progress"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:indeterminate="true"
+            android:progressBackgroundTint="@color/light_orange"
+            android:progressTint="@color/light_orange"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/notification_next"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_skip_next_24" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/notification_close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_close" />
+
+</LinearLayout>

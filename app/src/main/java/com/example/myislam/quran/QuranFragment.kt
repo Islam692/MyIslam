@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.myislam.Constance
+import com.example.myislam.Constants
 import com.example.myislam.chapterDetails.ChapterDetailsActivity
 import com.example.myislam.databinding.FragmentQuranBinding
 
@@ -503,10 +503,10 @@ class QuranFragment : Fragment() {
 
     private fun startChapterDetailsScreen(index: Int, name:String, number: List<String>, counter: List<String>) {
         val intent = Intent(context, ChapterDetailsActivity::class.java)
-        intent.putExtra(Constance.EXTRA_CHAPTER_INDEX, index + 1)
-        intent.putExtra(Constance.EXTRA_CHAPTER_NAME, name)
-        intent.putExtra(Constance.EXTRA_CHAPTER_NUMBER, number[index])
-        intent.putExtra(Constance.EXTRA_CHAPTER_COUNTER, counter[index])
+        intent.putExtra(Constants.EXTRA_CHAPTER_INDEX, index + 1)
+        intent.putExtra(Constants.EXTRA_CHAPTER_NAME, name)
+        intent.putExtra(Constants.EXTRA_CHAPTER_NUMBER, number[index])
+        intent.putExtra(Constants.EXTRA_CHAPTER_COUNTER, counter[index])
         startActivity(intent)
     }
 }

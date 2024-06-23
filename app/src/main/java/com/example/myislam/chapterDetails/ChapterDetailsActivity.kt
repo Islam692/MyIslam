@@ -4,7 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myislam.Constance
+import com.example.myislam.Constants
 import com.example.myislam.R
 import com.example.myislam.databinding.ActivityChapterDetailsBinding
 
@@ -56,9 +56,9 @@ class ChapterDetailsActivity : AppCompatActivity() {
     lateinit var chapterCounter: String
     var chapterIndex: Int = 0
     private fun initeParams() {
-        chapterName = intent.getStringExtra(Constance.EXTRA_CHAPTER_NAME) ?: ""
-        chapterIndex = intent.getIntExtra(Constance.EXTRA_CHAPTER_INDEX, 0)
-        chapterNumber = intent.getStringExtra(Constance.EXTRA_CHAPTER_NUMBER)!!
-        chapterCounter = intent.getStringExtra(Constance.EXTRA_CHAPTER_COUNTER)!!
+        chapterName = intent.getStringExtra(Constants.EXTRA_CHAPTER_NAME) ?: ""
+        chapterIndex = intent.getIntExtra(Constants.EXTRA_CHAPTER_INDEX, 0)
+        chapterNumber = intent.getStringExtra(Constants.EXTRA_CHAPTER_NUMBER)!!
+        chapterCounter = intent.getStringExtra(Constants.EXTRA_CHAPTER_COUNTER)!!
     }
 }
