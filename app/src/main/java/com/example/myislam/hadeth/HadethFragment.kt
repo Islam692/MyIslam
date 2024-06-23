@@ -26,16 +26,12 @@ class HadethFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-    }
-
-    lateinit var adapter: HadethRecyclerAdapter
-    private fun initViews() {
-        initRecyclerView()
         loadhadethfile()
         bindHadethList()
     }
 
-    private fun initRecyclerView() {
+    lateinit var adapter: HadethRecyclerAdapter
+    private fun initViews() {
         adapter = HadethRecyclerAdapter(null)
         adapter.onItemClickListener = HadethRecyclerAdapter.OnItemClickListener { pos, hadeth ->
             showHadethDetails(hadeth)
@@ -44,14 +40,14 @@ class HadethFragment : Fragment() {
     }
 
     private fun showHadethDetails(hadeth: Hadeth) {
-        val intent = Intent(context, HadethDetailsActivity::class.java)
+        val intent = Intent(activity, HadethDetailsActivity::class.java)
         intent.putExtra(Constance.EXTRA_HADETH, hadeth)
         startActivity(intent)
     }
 
     override fun onStart() {
         super.onStart()
-
+        bindHadethList()
     }
 
     private fun bindHadethList() {

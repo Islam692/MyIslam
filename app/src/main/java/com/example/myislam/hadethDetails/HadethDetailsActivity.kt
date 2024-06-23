@@ -2,7 +2,6 @@ package com.example.myislam.hadethDetails
 
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myislam.Constance
@@ -26,11 +25,6 @@ class HadethDetailsActivity : AppCompatActivity() {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.statusBarColor = this.resources.getColor(R.color.black)
         }
-
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
 
     }
 

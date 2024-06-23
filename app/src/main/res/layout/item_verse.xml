@@ -12,14 +12,14 @@
         android:gravity="center"
         android:lineHeight="40dp"
         android:padding="4dp"
-        android:textColor="#DCB486"
+        android:textColor="#fff"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="52dp"
-        tools:text="asdasdasdadasd" />
+        tools:text="qqqqqqqqq" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

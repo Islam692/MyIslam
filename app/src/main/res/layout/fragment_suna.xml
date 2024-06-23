@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/suna_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/dthullth_ii_1"
+            android:letterSpacing=".2"
+            android:padding="4dp"
+            android:text="السنن الرواتب"
+            android:textColor="#fff"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/after_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="بعد"
+            android:textColor="#DCB486"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/pray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/suna_pray" />
+
+        <TextView
+            android:id="@+id/pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="الصلاة"
+            android:textColor="#DCB486"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/before_pray"
+            app:layout_constraintStart_toEndOf="@id/after_pray"
+            app:layout_constraintTop_toBottomOf="@id/suna_pray" />
+
+        <TextView
+            android:id="@+id/shurok_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/dthullth_ii_1"
+            android:letterSpacing=".2"
+            android:padding="4dp"
+            android:text="الشروق"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/pray"
+            app:layout_constraintStart_toEndOf="@id/pray"
+            app:layout_constraintTop_toBottomOf="@id/pray" />
+
+        <TextView
+            android:id="@+id/fajir_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/dthullth_ii_1"
+            android:letterSpacing=".2"
+            android:padding="4dp"
+            android:text="الـفـجـر"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/pray"
+            app:layout_constraintStart_toEndOf="@id/pray"
+            app:layout_constraintTop_toBottomOf="@id/shurok_pray" />
+
+        <TextView
+            android:id="@+id/zuhr_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/dthullth_ii_1"
+            android:letterSpacing=".2"
+            android:padding="4dp"
+            android:text="ألـظـهـر"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/pray"
+            app:layout_constraintStart_toEndOf="@id/pray"
+            app:layout_constraintTop_toBottomOf="@id/fajir_pray" />
+
+        <TextView
+            android:id="@+id/asr_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/dthullth_ii_1"
+            android:letterSpacing=".2"
+            android:padding="4dp"
+            android:text="الـعـصـر"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/pray"
+            app:layout_constraintStart_toEndOf="@id/pray"
+            app:layout_constraintTop_toBottomOf="@id/zuhr_pray" />
+
+        <TextView
+            android:id="@+id/magrib_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/dthullth_ii_1"
+            android:letterSpacing=".2"
+            android:padding="4dp"
+            android:text="المغرب"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/pray"
+            app:layout_constraintStart_toEndOf="@id/pray"
+            app:layout_constraintTop_toBottomOf="@id/asr_pray" />
+
+        <TextView
+            android:id="@+id/isha_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/dthullth_ii_1"
+            android:letterSpacing=".2"
+            android:padding="4dp"
+            android:text="الــعــشــاء"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/pray"
+            app:layout_constraintStart_toEndOf="@id/pray"
+            app:layout_constraintTop_toBottomOf="@id/magrib_pray" />
+
+        <TextView
+            android:id="@+id/before_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="قبل"
+            android:textColor="#DCB486"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/pray"
+            app:layout_constraintTop_toBottomOf="@id/suna_pray" />
+
+        <TextView
+            android:id="@+id/before_shurok_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="2"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/shurok_pray"
+            app:layout_constraintEnd_toEndOf="@id/before_pray"
+            app:layout_constraintStart_toStartOf="@id/before_pray"
+            app:layout_constraintTop_toTopOf="@id/shurok_pray" />
+
+        <TextView
+            android:id="@+id/after_shurok_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="ـــــ"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/shurok_pray"
+            app:layout_constraintEnd_toEndOf="@id/after_pray"
+            app:layout_constraintStart_toStartOf="@id/after_pray"
+            app:layout_constraintTop_toTopOf="@id/shurok_pray" />
+
+        <TextView
+            android:id="@+id/before_fajir_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="2"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/fajir_pray"
+            app:layout_constraintEnd_toEndOf="@id/before_pray"
+            app:layout_constraintStart_toStartOf="@id/before_pray"
+            app:layout_constraintTop_toTopOf="@id/fajir_pray" />
+
+        <TextView
+            android:id="@+id/after_fajir_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="ـــــ"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/fajir_pray"
+            app:layout_constraintEnd_toEndOf="@id/after_pray"
+            app:layout_constraintStart_toStartOf="@id/after_pray"
+            app:layout_constraintTop_toTopOf="@id/fajir_pray" />
+
+        <TextView
+            android:id="@+id/before_zuhr_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="4"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/zuhr_pray"
+            app:layout_constraintEnd_toEndOf="@id/before_pray"
+            app:layout_constraintStart_toStartOf="@id/before_pray"
+            app:layout_constraintTop_toTopOf="@id/zuhr_pray" />
+
+        <TextView
+            android:id="@+id/after_zuhr_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="2"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/zuhr_pray"
+            app:layout_constraintEnd_toEndOf="@id/after_pray"
+            app:layout_constraintStart_toStartOf="@id/after_pray"
+            app:layout_constraintTop_toTopOf="@id/zuhr_pray" />
+
+        <TextView
+            android:id="@+id/before_asr_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="ـــــ"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/asr_pray"
+            app:layout_constraintEnd_toEndOf="@id/before_pray"
+            app:layout_constraintStart_toStartOf="@id/before_pray"
+            app:layout_constraintTop_toTopOf="@id/asr_pray" />
+
+        <TextView
+            android:id="@+id/after_asr_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="ـــــ"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/asr_pray"
+            app:layout_constraintEnd_toEndOf="@id/after_pray"
+            app:layout_constraintStart_toStartOf="@id/after_pray"
+            app:layout_constraintTop_toTopOf="@id/asr_pray" />
+
+        <TextView
+            android:id="@+id/before_magrib_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="ـــــ"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/magrib_pray"
+            app:layout_constraintEnd_toEndOf="@id/before_pray"
+            app:layout_constraintStart_toStartOf="@id/before_pray"
+            app:layout_constraintTop_toTopOf="@id/magrib_pray" />
+
+        <TextView
+            android:id="@+id/after_magrib_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="2"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/magrib_pray"
+            app:layout_constraintEnd_toEndOf="@id/after_pray"
+            app:layout_constraintStart_toStartOf="@id/after_pray"
+            app:layout_constraintTop_toTopOf="@id/magrib_pray" />
+
+        <TextView
+            android:id="@+id/before_isha_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="ـــــ"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/isha_pray"
+            app:layout_constraintEnd_toEndOf="@id/before_pray"
+            app:layout_constraintStart_toStartOf="@id/before_pray"
+            app:layout_constraintTop_toTopOf="@id/isha_pray" />
+
+        <TextView
+            android:id="@+id/after_isha_pray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="2"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/isha_pray"
+            app:layout_constraintEnd_toEndOf="@id/after_pray"
+            app:layout_constraintStart_toStartOf="@id/after_pray"
+            app:layout_constraintTop_toTopOf="@id/isha_pray" />
+
+        <LinearLayout
+            android:id="@+id/hadeth_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/isha_pray">
+
+            <TextView
+                android:id="@+id/headhadeth_of_suna"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="@string/sunahadeth"
+                android:textColor="#DCB486"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/hadeth_of_suna"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="@string/hadethforsuna"
+                android:textColor="#fff"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/info_of_suna"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="@string/infoforsuna"
+                android:textColor="#DCB486"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

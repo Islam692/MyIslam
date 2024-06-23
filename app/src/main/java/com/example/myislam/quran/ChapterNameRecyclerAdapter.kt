@@ -8,7 +8,8 @@ import com.example.myislam.databinding.ItemChapterNameBinding
 class ChapterNameRecyclerAdapter(
     private val names: List<String>,
     private val counter: List<String>,
-    private val numbers: List<String>
+    private val numbers: List<String>,
+    private val types: List<String>
 ) :
     RecyclerView.Adapter<ChapterNameRecyclerAdapter.viewHolder>() {
 
@@ -35,6 +36,7 @@ class ChapterNameRecyclerAdapter(
         holder.viewBinding.title.text = names[position]
         holder.viewBinding.counter.text = counter[position]
         holder.viewBinding.number.text = numbers[position]
+        holder.viewBinding.type.text = types[position]
         if (onItemClickListener != null) {
             holder.viewBinding.root.setOnClickListener {
                 onItemClickListener?.onItemClick(position, names[position])
