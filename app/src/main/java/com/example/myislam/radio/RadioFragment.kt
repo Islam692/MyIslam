@@ -1,10 +1,12 @@
 package com.example.myislam.radio
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -12,13 +14,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.myislam.Constants
 import com.example.myislam.R
 import com.example.myislam.api.Radio
 import com.example.myislam.databinding.FragmentRadioBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class RadioFragment : Fragment() {
@@ -27,6 +36,10 @@ class RadioFragment : Fragment() {
 
     private lateinit var radioPlayerService: RadioPlayerService
     private var isRadioPlayerServiceBound: Boolean = false
+
+    private lateinit var notificationPermissionRequestLauncher: ActivityResultLauncher<String>
+    private lateinit var notificationPermissionDialog: AlertDialog
+
 
     private val radioPlayerServiceConnection = object : ServiceConnection {
 
@@ -71,7 +84,9 @@ class RadioFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    var isShowing = false
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -80,11 +95,77 @@ class RadioFragment : Fragment() {
             Context.MODE_PRIVATE
         )
 
-        initRadioService()
+        notificationPermissionDialog = createDialog(
+            "Permission Required",
+            "In order to play the radios, we need the notification permission",
+            "Request again",
+            {
+                isShowing = true
+                Toast.makeText(requireContext(), "again", Toast.LENGTH_SHORT).show()
+                notificationPermissionRequestLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            },
+            "No thanks"
+        )
+
+        notificationPermissionRequestLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { permissionGranted ->
+            if (permissionGranted) {
+                initRadioFragment()
+            }
+        }
+
+        // Request permission if not granted
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                initRadioFragment()
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) -> {
+                notificationPermissionDialog.show()
+            }
+
+            else -> notificationPermissionRequestLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
 
         binding.play.setOnClickListener { toggleRadioPlayer() }
         binding.next.setOnClickListener { playNextRadio() }
         binding.previous.setOnClickListener { playPreviousRadio() }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun initRadioFragment() {
+        // show proper UI and start service
+        Toast.makeText(requireContext(), "radio running", Toast.LENGTH_SHORT).show()
+        initRadioService()
+    }
+
+    private fun createDialog(
+        title: String,
+        message: String,
+        posBtnText: String? = null,
+        posBtnAction: (() -> Unit)? = null,
+        negBtnText: String? = null,
+        negBtnAction: (() -> Unit)? = null,
+        isCancelable: Boolean = false
+    ): AlertDialog {
+        return MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(posBtnText) { dialog, _ ->
+                posBtnAction?.invoke()
+            }
+            .setNegativeButton(negBtnText) { dialog, _ ->
+                negBtnAction?.invoke()
+            }
+            .setCancelable(isCancelable)
+            .create()
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
