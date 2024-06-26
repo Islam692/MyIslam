@@ -13,4 +13,5 @@
     <string name="radio_player_channel">Radio channel</string>
     <string name="radio_player_description">this channel to display radio player</string>
     <string name="radio_default_title">Islami Radio Player</string>
+    <string name="initial_radio_name">إذاعـة القـرآن الـكـريـم</string>
 </resources>
