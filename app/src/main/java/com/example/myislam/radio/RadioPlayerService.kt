@@ -65,7 +65,10 @@ class RadioPlayerService : Service() {
         Log.d(LOGGING_TAG, "radio service started")
         intent?.getIntExtra(START_ACTION, -1)?.let { clickAction ->
             when (clickAction) {
-                INIT_SERVICE -> loadRadios()
+                INIT_SERVICE -> {
+                    startForegroundServiceWithNotification()
+                    loadRadios()
+                }
                 PLAY_ACTION -> playOrPauseRadio()
                 NEXT_ACTION -> playNextRadio()
                 PREVIOUS_ACTION -> playPreviousRadio()
@@ -78,7 +81,9 @@ class RadioPlayerService : Service() {
     }
 
     private fun stopService() {
-        this.stopSelf()
+        this.stopForeground(true)
+        this.stopSelfResult(RADIO_SERVICE_ID)
+        radioMediaPlayerContract?.onServiceStopped()
     }
 
     override fun onCreate() {
@@ -326,7 +331,6 @@ class RadioPlayerService : Service() {
                 start()
                 currentlyPlaying = true
                 radioMediaPlayerContract?.onPlayed(currentRadio)
-//                radioMediaPlayerContract?.onPaused(currentRadio)
             }
         }
     }
@@ -343,5 +347,6 @@ class RadioPlayerService : Service() {
         fun onNextPlayed(radio: Radio)
         fun onPreviousPlayed(radio: Radio)
         fun onLoading()
+        fun onServiceStopped()
     }
 }

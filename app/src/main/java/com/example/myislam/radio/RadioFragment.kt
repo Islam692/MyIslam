@@ -38,6 +38,7 @@ class RadioFragment : Fragment() {
 
     private lateinit var radioPlayerService: RadioPlayerService
     private var isRadioPlayerServiceBound: Boolean = false
+    private var serviceStopped = false
 
     private lateinit var notificationPermissionRequestLauncher: ActivityResultLauncher<String>
     private lateinit var notificationPermissionDialog: AlertDialog
@@ -167,9 +168,7 @@ class RadioFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // check channel status on return
-        if (settingsOpenedToEnableChannel) {
-            if (isNotificationChannelEnabled()) showMainFragmentUI()
-        }
+        handleNotificationPermissionAndChannel()
     }
 
     private fun handleNotificationPermissionAndChannel(): Boolean {
@@ -282,11 +281,19 @@ class RadioFragment : Fragment() {
             override fun onLoading() {
                 togglePlayingVisibility(false)
             }
+
+            override fun onServiceStopped() {
+                serviceStopped = true
+            }
         })
     }
 
     private fun toggleRadioPlayer() {
         if (!handleNotificationPermissionAndChannel()) return
+        if (serviceStopped) {
+            initRadioService()
+            return
+        }
 
         if (isRadioPlayerServiceBound) {
             radioPlayerService.playOrPauseRadio()
@@ -295,6 +302,10 @@ class RadioFragment : Fragment() {
 
     private fun playPreviousRadio() {
         if (!handleNotificationPermissionAndChannel()) return
+        if (serviceStopped) {
+            initRadioService()
+            return
+        }
 
         if (isRadioPlayerServiceBound) {
             radioPlayerService.playPreviousRadio()
@@ -305,6 +316,10 @@ class RadioFragment : Fragment() {
 
     private fun playNextRadio() {
         if (!handleNotificationPermissionAndChannel()) return
+        if (serviceStopped) {
+            initRadioService()
+            return
+        }
 
         if (isRadioPlayerServiceBound) {
             radioPlayerService.playNextRadio()
