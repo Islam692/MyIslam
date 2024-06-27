@@ -18,6 +18,15 @@ import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.myislam.Constants
+import com.example.myislam.Constants.CHANNEL_ID
+import com.example.myislam.Constants.CHANNEL_NAME
+import com.example.myislam.Constants.CLOSE_ACTION
+import com.example.myislam.Constants.INIT_SERVICE
+import com.example.myislam.Constants.NEXT_ACTION
+import com.example.myislam.Constants.PLAY_ACTION
+import com.example.myislam.Constants.PREVIOUS_ACTION
+import com.example.myislam.Constants.RADIO_SERVICE_ID
+import com.example.myislam.Constants.START_ACTION
 import com.example.myislam.R
 import com.example.myislam.api.ApiManager
 import com.example.myislam.api.Radio
@@ -27,14 +36,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-const val RADIO_SERVICE_ID = 100
-const val CLICK_ACTION = "ClickAction"
-const val PLAY_ACTION = 1
-const val NEXT_ACTION = 2
-const val PREVIOUS_ACTION = 3
-const val CLOSE_ACTION = 4
-const val CHANNEL_ID = "RadioFragChannelId"
-const val CHANNEL_NAME = "Radio Media Playback"
 const val LOGGING_TAG = "RadioService"
 
 class RadioPlayerService : Service() {
@@ -46,6 +47,7 @@ class RadioPlayerService : Service() {
     private lateinit var radiosList: List<Radio>
     private var currentlyPlaying = false
     private var currentRadioIndex = 0
+    private var currentRadio: Radio = Radio()
 
     inner class LocalBinder : Binder() {
         fun getService(): RadioPlayerService {
@@ -61,8 +63,12 @@ class RadioPlayerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.d(LOGGING_TAG, "radio service started")
-        intent?.getIntExtra(CLICK_ACTION, -1)?.let { clickAction ->
+        intent?.getIntExtra(START_ACTION, -1)?.let { clickAction ->
             when (clickAction) {
+                INIT_SERVICE -> {
+                    startForegroundServiceWithNotification()
+                    loadRadios()
+                }
                 PLAY_ACTION -> playOrPauseRadio()
                 NEXT_ACTION -> playNextRadio()
                 PREVIOUS_ACTION -> playPreviousRadio()
@@ -75,17 +81,16 @@ class RadioPlayerService : Service() {
     }
 
     private fun stopService() {
-        this.stopSelf()
+        this.stopForeground(true)
+        this.stopSelfResult(RADIO_SERVICE_ID)
+        radioMediaPlayerContract?.onServiceStopped()
     }
 
     override fun onCreate() {
         super.onCreate()
         // initialization
         Log.d(LOGGING_TAG, "radio service created")
-
         startForegroundServiceWithNotification()
-
-        loadRadios()
     }
 
     private fun startForegroundServiceWithNotification() {
@@ -157,7 +162,7 @@ class RadioPlayerService : Service() {
         actionCode: Int
     ) {
         val actionIntent = Intent(context, RadioPlayerService::class.java).apply {
-            putExtra(CLICK_ACTION, actionCode)
+            putExtra(START_ACTION, actionCode)
         }
 
         val actionPendingIntent = PendingIntent.getService(
@@ -209,19 +214,21 @@ class RadioPlayerService : Service() {
     }
 
     fun playOrPauseRadio() {
-        if (!mediaPlayerAvailable) {
-            Toast.makeText(this, "media player not available", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
-
         if (currentlyPlaying) {
             mediaPlayer.pause()
-            radioMediaPlayerContract?.onPaused()
+            radioMediaPlayerContract?.onPaused(currentRadio)
             customContentRV.togglePlayingStatus(false)
         } else {
+
+            if (!mediaPlayerAvailable) {
+                Toast
+                    .makeText(this, "media player not available, refreshing...", Toast.LENGTH_SHORT)
+                    .show()
+                return
+            }
+
             mediaPlayer.start()
-            radioMediaPlayerContract?.onPlayed()
+            radioMediaPlayerContract?.onPlayed(currentRadio)
             customContentRV.togglePlayingStatus(true)
         }
     }
@@ -247,30 +254,31 @@ class RadioPlayerService : Service() {
     }
 
     private fun playRadioAtCurrentIndex(isPlayingNext: Boolean) {
+        currentRadio = radiosList[currentRadioIndex]
         mediaPlayer.apply {
             reset()
-            setDataSource(radiosList[currentRadioIndex].url)
+            setDataSource(currentRadio.url)
             prepareAsync()
             setOnPreparedListener {
                 mediaPlayerAvailable = true
                 customContentRV.updateText(
                     R.id.notification_title,
-                    radiosList[currentRadioIndex].name
+                    currentRadio.name
                 )
                 customContentRV.togglePlayingVisibility(true)
                 start()
-                if (isPlayingNext) radioMediaPlayerContract?.onNextPlayed()
-                else radioMediaPlayerContract?.onPreviousPlayed()
+                if (isPlayingNext) radioMediaPlayerContract?.onNextPlayed(currentRadio)
+                else radioMediaPlayerContract?.onPreviousPlayed(currentRadio)
                 customContentRV.togglePlayingStatus(true)
             }
         }
-
-//        saveRadioData()
     }
 
     private fun getCurrentLanguageCode(): String {
-        return if (resources.configuration.locales[0].language == "ar") Constants.ARABIC_LANG_CODE
-        else Constants.ENGLISH_LANG_CODE
+        return when (resources.configuration.locales[0].language) {
+            Constants.ARABIC_LANG_CODE -> Constants.ARABIC_LANG_CODE
+            else -> Constants.API_ENGLISH_LANG_CODE
+        }
     }
 
     private fun loadRadios() {
@@ -285,6 +293,8 @@ class RadioPlayerService : Service() {
                 ) {
                     if (response.isSuccessful) {
                         radiosList = response.body()?.radios ?: emptyList()
+                        currentRadio = radiosList[currentRadioIndex]
+                        customContentRV.togglePlayingVisibility(true)
                         if (_mediaPlayer == null) initMediaPlayer()
                     } else {
                         Log.d(
@@ -308,18 +318,19 @@ class RadioPlayerService : Service() {
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .build()
             )
-            setDataSource(url ?: radiosList[currentRadioIndex].url)
+            setDataSource(url ?: currentRadio.url)
             prepareAsync()
             setOnPreparedListener {
                 mediaPlayerAvailable = true
                 customContentRV.updateText(
                     R.id.notification_title,
-                    name ?: radiosList[currentRadioIndex].name
+                    name ?: currentRadio.name
                 )
                 customContentRV.togglePlayingVisibility(true)
-//                start()
-                customContentRV.togglePlayingStatus(false)
-                radioMediaPlayerContract?.onPaused()
+                customContentRV.togglePlayingStatus(true)
+                start()
+                currentlyPlaying = true
+                radioMediaPlayerContract?.onPlayed(currentRadio)
             }
         }
     }
@@ -331,10 +342,11 @@ class RadioPlayerService : Service() {
     }
 
     interface RadioMediaPlayerContract {
-        fun onPlayed()
-        fun onPaused()
-        fun onNextPlayed()
-        fun onPreviousPlayed()
+        fun onPlayed(radio: Radio)
+        fun onPaused(radio: Radio)
+        fun onNextPlayed(radio: Radio)
+        fun onPreviousPlayed(radio: Radio)
         fun onLoading()
+        fun onServiceStopped()
     }
 }
