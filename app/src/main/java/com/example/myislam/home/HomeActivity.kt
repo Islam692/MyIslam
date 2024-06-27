@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.WindowManager.LayoutParams
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.myislam.R
@@ -15,11 +16,14 @@ import com.example.myislam.settings.SettingsFragment
 import com.example.myislam.suna.SunaFragment
 import com.example.myislam.tasbeh.TasbehFragment
 import com.google.android.material.navigation.NavigationBarView
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityHomeBinding
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityHomeBinding.inflate(layoutInflater)

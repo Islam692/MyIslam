@@ -29,9 +29,11 @@ import com.example.myislam.R
 import com.example.myislam.api.Radio
 import com.example.myislam.databinding.FragmentRadioBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@AndroidEntryPoint
 class RadioFragment : Fragment() {
     private lateinit var binding: FragmentRadioBinding
     private lateinit var sharedPreferences: SharedPreferences

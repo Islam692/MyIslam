@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -13,7 +12,6 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -32,20 +30,27 @@ import com.example.myislam.api.ApiManager
 import com.example.myislam.api.Radio
 import com.example.myislam.api.RadioResponse
 import com.example.myislam.home.HomeActivity
+import com.example.myislam.radio.NotificationRemoteViewHelper.setupClickActions
+import com.example.myislam.radio.NotificationRemoteViewHelper.showLoadingProgress
+import com.example.myislam.radio.NotificationRemoteViewHelper.showPauseButton
+import com.example.myislam.radio.NotificationRemoteViewHelper.showPlayButton
+import com.example.myislam.radio.NotificationRemoteViewHelper.showPlayPauseButton
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 const val LOGGING_TAG = "RadioService"
 
+@AndroidEntryPoint
 class RadioPlayerService : Service() {
 
-    private lateinit var customContentRV: RemoteViews
+    private lateinit var notificationRV: RemoteViews
     private var _mediaPlayer: MediaPlayer? = null
     private val mediaPlayer: MediaPlayer get() = _mediaPlayer!!
     private var mediaPlayerAvailable = false
     private lateinit var radiosList: List<Radio>
-    private var currentlyPlaying = false
+    private var isCurrentlyPlaying = false
     private var currentRadioIndex = 0
     private var currentRadio: Radio = Radio()
 
@@ -66,9 +71,10 @@ class RadioPlayerService : Service() {
         intent?.getIntExtra(START_ACTION, -1)?.let { clickAction ->
             when (clickAction) {
                 INIT_SERVICE -> {
-                    startForegroundServiceWithNotification()
+                    startForegroundServiceWithNotification() // in case started after stopped
                     loadRadios()
                 }
+
                 PLAY_ACTION -> playOrPauseRadio()
                 NEXT_ACTION -> playNextRadio()
                 PREVIOUS_ACTION -> playPreviousRadio()
@@ -97,9 +103,10 @@ class RadioPlayerService : Service() {
         try {
             createNotificationChannel()
 
-            customContentRV = createNotificationCustomView()
+            notificationRV = createNotificationRemoteView()
+            updateNotification()
 
-            startForeground(RADIO_SERVICE_ID, createNotification(customContentRV))
+            startForeground(RADIO_SERVICE_ID, createNotification(notificationRV))
         } catch (e: Exception) {
             Toast.makeText(
                 this, "Error occurred: ${e.message}", Toast.LENGTH_SHORT
@@ -143,66 +150,18 @@ class RadioPlayerService : Service() {
         }
     }
 
-    private fun createNotificationCustomView(): RemoteViews {
-        val customContentRV = RemoteViews(this.packageName, R.layout.notification_collapsed_content)
-
-        customContentRV.createCustomViewAction(this, R.id.notification_play, PLAY_ACTION)
-        customContentRV.createCustomViewAction(this, R.id.notification_next, NEXT_ACTION)
-        customContentRV.createCustomViewAction(this, R.id.notification_previous, PREVIOUS_ACTION)
-        customContentRV.createCustomViewAction(this, R.id.notification_close, CLOSE_ACTION)
-        val radioText = resources.getString(R.string.radio_default_title)
-        customContentRV.setTextViewText(R.id.notification_title, radioText)
-
-        return customContentRV
+    private fun updateNotification() {
+        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+            .notify(RADIO_SERVICE_ID, createNotification(notificationRV))
     }
 
-    private fun RemoteViews.createCustomViewAction(
-        context: Context,
-        viewId: Int,
-        actionCode: Int
-    ) {
-        val actionIntent = Intent(context, RadioPlayerService::class.java).apply {
-            putExtra(START_ACTION, actionCode)
+    private fun createNotificationRemoteView(): RemoteViews {
+        RemoteViews(this.packageName, R.layout.notification_collapsed_content).apply {
+            val defaultRadioTitle = resources.getString(R.string.radio_default_title)
+            setTextViewText(R.id.notification_title, defaultRadioTitle)
+            setupClickActions(this@RadioPlayerService)
+            return this
         }
-
-        val actionPendingIntent = PendingIntent.getService(
-            context, actionCode, actionIntent, PendingIntent.FLAG_IMMUTABLE
-        )
-
-        this.setOnClickPendingIntent(viewId, actionPendingIntent)
-    }
-
-    private fun RemoteViews.updateText(viewId: Int, text: String?) {
-        this.setTextViewText(viewId, text)
-
-        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
-            .notify(RADIO_SERVICE_ID, createNotification(customContentRV))
-    }
-
-    private fun RemoteViews.updateImage(viewId: Int, imageResId: Int) {
-        this.setImageViewResource(viewId, imageResId)
-
-        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
-            .notify(RADIO_SERVICE_ID, createNotification(customContentRV))
-    }
-
-    private fun RemoteViews.togglePlayingVisibility(playing: Boolean) {
-        val visibility = if (playing) View.VISIBLE else View.GONE
-        val opposite = if (playing) View.GONE else View.VISIBLE
-        this.setViewVisibility(R.id.notification_play, visibility)
-        this.setViewVisibility(R.id.notification_loading_progress, opposite)
-
-        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
-            .notify(RADIO_SERVICE_ID, createNotification(customContentRV))
-    }
-
-    private fun RemoteViews.togglePlayingStatus(currentlyPlaying: Boolean) {
-        this@RadioPlayerService.currentlyPlaying = currentlyPlaying
-        val resId = if (currentlyPlaying) R.drawable.baseline_play_arrow_24 else R.drawable.ic_pause
-        this.setImageViewResource(R.id.notification_play, resId)
-
-        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
-            .notify(RADIO_SERVICE_ID, createNotification(customContentRV))
     }
 
     override fun onDestroy() {
@@ -214,10 +173,11 @@ class RadioPlayerService : Service() {
     }
 
     fun playOrPauseRadio() {
-        if (currentlyPlaying) {
+        if (isCurrentlyPlaying) {
             mediaPlayer.pause()
             radioMediaPlayerContract?.onPaused(currentRadio)
-            customContentRV.togglePlayingStatus(false)
+            isCurrentlyPlaying = false
+            notificationRV.showPauseButton()
         } else {
 
             if (!mediaPlayerAvailable) {
@@ -229,14 +189,19 @@ class RadioPlayerService : Service() {
 
             mediaPlayer.start()
             radioMediaPlayerContract?.onPlayed(currentRadio)
-            customContentRV.togglePlayingStatus(true)
+            isCurrentlyPlaying = true
+            notificationRV.showPlayButton()
         }
+
+        updateNotification()
     }
 
     fun playPreviousRadio() {
         mediaPlayerAvailable = false
-        customContentRV.togglePlayingVisibility(false)
-        customContentRV.togglePlayingStatus(false)
+        notificationRV.showLoadingProgress()
+        isCurrentlyPlaying = false
+        notificationRV.showPauseButton()
+        updateNotification()
         radioMediaPlayerContract?.onLoading()
 
         currentRadioIndex = if (currentRadioIndex == 0) radiosList.size - 1 else --currentRadioIndex
@@ -245,8 +210,10 @@ class RadioPlayerService : Service() {
 
     fun playNextRadio() {
         mediaPlayerAvailable = false
-        customContentRV.togglePlayingVisibility(false)
-        customContentRV.togglePlayingStatus(false)
+        notificationRV.showLoadingProgress()
+        isCurrentlyPlaying = false
+        notificationRV.showPauseButton()
+        updateNotification()
         radioMediaPlayerContract?.onLoading()
 
         currentRadioIndex = if (currentRadioIndex == radiosList.size - 1) 0 else ++currentRadioIndex
@@ -261,15 +228,16 @@ class RadioPlayerService : Service() {
             prepareAsync()
             setOnPreparedListener {
                 mediaPlayerAvailable = true
-                customContentRV.updateText(
-                    R.id.notification_title,
-                    currentRadio.name
-                )
-                customContentRV.togglePlayingVisibility(true)
+                notificationRV.setTextViewText(R.id.notification_title, currentRadio.name)
+                notificationRV.showPlayPauseButton()
+
                 start()
                 if (isPlayingNext) radioMediaPlayerContract?.onNextPlayed(currentRadio)
                 else radioMediaPlayerContract?.onPreviousPlayed(currentRadio)
-                customContentRV.togglePlayingStatus(true)
+
+                isCurrentlyPlaying = true
+                notificationRV.showPlayButton()
+                updateNotification()
             }
         }
     }
@@ -282,7 +250,8 @@ class RadioPlayerService : Service() {
     }
 
     private fun loadRadios() {
-        customContentRV.togglePlayingVisibility(false)
+        notificationRV.showLoadingProgress()
+        updateNotification()
 
         ApiManager.getRadiosService()
             .getRadios(language = getCurrentLanguageCode())
@@ -294,7 +263,8 @@ class RadioPlayerService : Service() {
                     if (response.isSuccessful) {
                         radiosList = response.body()?.radios ?: emptyList()
                         currentRadio = radiosList[currentRadioIndex]
-                        customContentRV.togglePlayingVisibility(true)
+                        notificationRV.showPlayPauseButton()
+                        updateNotification()
                         if (_mediaPlayer == null) initMediaPlayer()
                     } else {
                         Log.d(
@@ -322,14 +292,16 @@ class RadioPlayerService : Service() {
             prepareAsync()
             setOnPreparedListener {
                 mediaPlayerAvailable = true
-                customContentRV.updateText(
-                    R.id.notification_title,
-                    name ?: currentRadio.name
-                )
-                customContentRV.togglePlayingVisibility(true)
-                customContentRV.togglePlayingStatus(true)
+
+                notificationRV.setTextViewText(R.id.notification_title, name ?: currentRadio.name)
+                notificationRV.showPlayPauseButton()
+
+                isCurrentlyPlaying = true
+                notificationRV.showPlayButton()
+                updateNotification()
+
                 start()
-                currentlyPlaying = true
+                isCurrentlyPlaying = true
                 radioMediaPlayerContract?.onPlayed(currentRadio)
             }
         }
