@@ -51,7 +51,7 @@ class RadioFragment : Fragment() {
     private val radioPlayerServiceConnection = object : ServiceConnection {
 
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as RadioPlayerService.LocalBinder
+            val binder = service as RadioPlayerService.RadioPlayerBinder
             radioPlayerService = binder.getService()
             isRadioPlayerServiceBound = true
             defineRadioPlayerServiceContract()
@@ -254,8 +254,8 @@ class RadioFragment : Fragment() {
     }
 
     private fun defineRadioPlayerServiceContract() {
-        radioPlayerService.defineRadioMediaPlayerContract(object :
-            RadioPlayerService.RadioMediaPlayerContract {
+        radioPlayerService.setRadioPlayerCallback(object :
+            RadioPlayerService.RadioPlayerCallback {
             override fun onPlayed(radio: Radio) {
                 togglePlayingVisibility(true)
                 togglePlayingStatus(true)

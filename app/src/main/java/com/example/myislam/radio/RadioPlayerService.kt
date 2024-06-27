@@ -32,6 +32,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
+// TODO: try stopping service and interact with the UI, it won't work. Solve this issue later.
+
 const val LOGGING_TAG = "RadioService"
 
 @AndroidEntryPoint
@@ -39,36 +41,36 @@ class RadioPlayerService : Service() {
 
     @Inject
     lateinit var notificationHelper: NotificationHelper
-    private lateinit var notificationRV: RemoteViews
+    private lateinit var notificationRemoteView: RemoteViews
     private lateinit var notification: Notification
 
     private var _mediaPlayer: MediaPlayer? = null
     private val mediaPlayer: MediaPlayer get() = _mediaPlayer!!
-    private var mediaPlayerAvailable = false
+    private var isMediaPlayerAvailable = false
     private lateinit var radiosList: List<Radio>
-    private var isCurrentlyPlaying = false
+    private var isPlaying = false
     private var currentRadioIndex = 0
     private var currentRadio: Radio = Radio()
 
     @Inject
     lateinit var utils: Utils
 
-    inner class LocalBinder : Binder() {
+    inner class RadioPlayerBinder : Binder() {
         fun getService(): RadioPlayerService {
             return this@RadioPlayerService
         }
     }
 
-    private val iBinder: IBinder = LocalBinder()
+    private val binder: IBinder = RadioPlayerBinder()
 
-    override fun onBind(intent: Intent?): IBinder = iBinder
+    override fun onBind(intent: Intent?): IBinder = binder
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        Log.d(LOGGING_TAG, "radio service started")
-        intent?.getIntExtra(START_ACTION, -1)?.let { clickAction ->
-            when (clickAction) {
+        Log.d(LOGGING_TAG, "Radio service started")
+        intent?.getIntExtra(START_ACTION, -1)?.let { action ->
+            when (action) {
                 INIT_SERVICE -> {
                     startForegroundServiceWithNotification() // in case started after stopped
                     loadRadios()
@@ -78,7 +80,7 @@ class RadioPlayerService : Service() {
                 NEXT_ACTION -> playNextRadio()
                 PREVIOUS_ACTION -> playPreviousRadio()
                 CLOSE_ACTION -> stopService()
-                else -> Log.d(LOGGING_TAG, "unknown start action with code $clickAction")
+                else -> Log.d(LOGGING_TAG, "Unknown start action with code $action")
             }
         }
 
@@ -87,22 +89,21 @@ class RadioPlayerService : Service() {
 
     private fun stopService() {
         stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelfResult(RADIO_SERVICE_ID)
-        radioMediaPlayerContract?.onServiceStopped()
+        stopSelf()
+        radioPlayerCallback?.onServiceStopped()
     }
 
     override fun onCreate() {
         super.onCreate()
-        // initialization
-        Log.d(LOGGING_TAG, "radio service created")
+        Log.d(LOGGING_TAG, "Radio service created")
         startForegroundServiceWithNotification()
     }
 
     private fun startForegroundServiceWithNotification() {
         try {
             notificationHelper.createNotificationChannel()
-            notificationRV = createNotificationRemoteView()
-            notification = notificationHelper.createNotification(this, notificationRV)
+            notificationRemoteView = createNotificationRemoteView()
+            notification = notificationHelper.createNotification(this, notificationRemoteView)
             notificationHelper.updateNotification(notification)
             startForeground(RADIO_SERVICE_ID, notification)
         } catch (e: Exception) {
@@ -121,57 +122,55 @@ class RadioPlayerService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(LOGGING_TAG, "radio service destroyed")
-        // releasing resources
+        Log.d(LOGGING_TAG, "Radio service destroyed")
         mediaPlayer.release()
         _mediaPlayer = null
     }
 
     fun playOrPauseRadio() {
-        if (isCurrentlyPlaying) {
+        if (isPlaying) {
             mediaPlayer.pause()
-            isCurrentlyPlaying = false
-            notificationRV.showPauseButton()
-            radioMediaPlayerContract?.onPaused(currentRadio)
+            isPlaying = false
+            notificationRemoteView.showPauseButton()
+            radioPlayerCallback?.onPaused(currentRadio)
         } else {
-            if (!mediaPlayerAvailable) {
+            if (!isMediaPlayerAvailable) {
                 utils.showShortToast("Radio player not available, refreshing...")
                 return
             }
 
             mediaPlayer.start()
-            isCurrentlyPlaying = true
-            notificationRV.showPlayButton()
-            radioMediaPlayerContract?.onPlayed(currentRadio)
+            isPlaying = true
+            notificationRemoteView.showPlayButton()
+            radioPlayerCallback?.onPlayed(currentRadio)
         }
 
         notificationHelper.updateNotification(notification)
     }
 
     fun playPreviousRadio() {
-        mediaPlayerAvailable = false
-        notificationRV.showLoadingProgress()
-        isCurrentlyPlaying = false
-        notificationRV.showPauseButton()
-        radioMediaPlayerContract?.onLoading()
-
-        notificationHelper.updateNotification(notification)
+        isMediaPlayerAvailable = false
+        isPlaying = false
+        updateNotificationForLoading()
 
         currentRadioIndex = if (currentRadioIndex == 0) radiosList.size - 1 else --currentRadioIndex
         playRadioAtCurrentIndex(false)
     }
 
     fun playNextRadio() {
-        mediaPlayerAvailable = false
-        notificationRV.showLoadingProgress()
-        isCurrentlyPlaying = false
-        notificationRV.showPauseButton()
-        radioMediaPlayerContract?.onLoading()
-
-        notificationHelper.updateNotification(notification)
+        isMediaPlayerAvailable = false
+        isPlaying = false
+        updateNotificationForLoading()
 
         currentRadioIndex = if (currentRadioIndex == radiosList.size - 1) 0 else ++currentRadioIndex
         playRadioAtCurrentIndex(true)
+    }
+
+    private fun updateNotificationForLoading() {
+        notificationRemoteView.showLoadingProgress()
+        notificationRemoteView.showPauseButton()
+        radioPlayerCallback?.onLoading()
+        notificationHelper.updateNotification(notification)
     }
 
     private fun playRadioAtCurrentIndex(isPlayingNext: Boolean) {
@@ -181,25 +180,24 @@ class RadioPlayerService : Service() {
             setDataSource(currentRadio.url)
             prepareAsync()
             setOnPreparedListener {
-                mediaPlayerAvailable = true
-                notificationRV.showPlayPauseButton()
-                notificationRV.setTextViewText(R.id.notification_title, currentRadio.name)
+                isMediaPlayerAvailable = true
+                notificationRemoteView.showPlayPauseButton()
+                notificationRemoteView.setTextViewText(R.id.notification_title, currentRadio.name)
 
                 start()
-
-                if (isPlayingNext) radioMediaPlayerContract?.onNextPlayed(currentRadio)
-                else radioMediaPlayerContract?.onPreviousPlayed(currentRadio)
-
-                isCurrentlyPlaying = true
-                notificationRV.showPlayButton()
+                this@RadioPlayerService.isPlaying = true
+                notificationRemoteView.showPlayButton()
                 notificationHelper.updateNotification(notification)
+
+                if (isPlayingNext) radioPlayerCallback?.onNextPlayed(currentRadio)
+                else radioPlayerCallback?.onPreviousPlayed(currentRadio)
             }
         }
     }
 
 
     private fun loadRadios() {
-        notificationRV.showLoadingProgress()
+        notificationRemoteView.showLoadingProgress()
         notificationHelper.updateNotification(notification)
 
         ApiManager.getRadiosService()
@@ -212,24 +210,26 @@ class RadioPlayerService : Service() {
                     if (response.isSuccessful) {
                         radiosList = response.body()?.radios ?: emptyList()
                         currentRadio = radiosList[currentRadioIndex]
-                        notificationRV.showPlayPauseButton()
+                        notificationRemoteView.showPlayPauseButton()
                         notificationHelper.updateNotification(notification)
-                        if (_mediaPlayer == null) initMediaPlayer()
+                        if (_mediaPlayer == null) initializeMediaPlayer()
                     } else {
                         Log.d(
                             LOGGING_TAG,
-                            "radio service error: ${response.errorBody().toString()}"
+                            "Radio service error: ${
+                                response.errorBody()?.toString() ?: "Unknown error"
+                            }"
                         )
                     }
                 }
 
-                override fun onFailure(p0: Call<RadioResponse>, p1: Throwable) {
-                    Log.d(LOGGING_TAG, p1.message ?: "radio service unknown error")
+                override fun onFailure(call: Call<RadioResponse>, throwable: Throwable) {
+                    Log.d(LOGGING_TAG, throwable.message ?: "Radio service unknown error")
                 }
             })
     }
 
-    private fun initMediaPlayer(name: String? = null, url: String? = null) {
+    private fun initializeMediaPlayer(name: String? = null, url: String? = null) {
         _mediaPlayer = MediaPlayer().apply {
             setAudioAttributes(
                 AudioAttributes.Builder()
@@ -240,25 +240,28 @@ class RadioPlayerService : Service() {
             setDataSource(url ?: currentRadio.url)
             prepareAsync()
             setOnPreparedListener {
-                mediaPlayerAvailable = true
-                notificationRV.showPlayPauseButton()
-                notificationRV.setTextViewText(R.id.notification_title, name ?: currentRadio.name)
-                isCurrentlyPlaying = true
-                notificationRV.showPlayButton()
+                isMediaPlayerAvailable = true
+                notificationRemoteView.showPlayPauseButton()
+                notificationRemoteView.setTextViewText(
+                    R.id.notification_title,
+                    name ?: currentRadio.name
+                )
+                this@RadioPlayerService.isPlaying = true
+                notificationRemoteView.showPlayButton()
                 notificationHelper.updateNotification(notification)
                 start()
-                radioMediaPlayerContract?.onPlayed(currentRadio)
+                radioPlayerCallback?.onPlayed(currentRadio)
             }
         }
     }
 
-    private var radioMediaPlayerContract: RadioMediaPlayerContract? = null
+    private var radioPlayerCallback: RadioPlayerCallback? = null
 
-    fun defineRadioMediaPlayerContract(contract: RadioMediaPlayerContract) {
-        radioMediaPlayerContract = contract
+    fun setRadioPlayerCallback(callback: RadioPlayerCallback) {
+        radioPlayerCallback = callback
     }
 
-    interface RadioMediaPlayerContract {
+    interface RadioPlayerCallback {
         fun onPlayed(radio: Radio)
         fun onPaused(radio: Radio)
         fun onNextPlayed(radio: Radio)
