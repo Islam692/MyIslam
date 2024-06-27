@@ -209,17 +209,19 @@ class RadioPlayerService : Service() {
     }
 
     fun playOrPauseRadio() {
-        if (!mediaPlayerAvailable) {
-            Toast.makeText(this, "media player not available", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
-
         if (currentlyPlaying) {
             mediaPlayer.pause()
-            radioMediaPlayerContract?.onPaused()
+            radioMediaPlayerContract?.onPaused(currentRadio)
             customContentRV.togglePlayingStatus(false)
         } else {
+
+            if (!mediaPlayerAvailable) {
+                Toast
+                    .makeText(this, "media player not available, refreshing...", Toast.LENGTH_SHORT)
+                    .show()
+                return
+            }
+
             mediaPlayer.start()
             radioMediaPlayerContract?.onPlayed(currentRadio)
             customContentRV.togglePlayingStatus(true)
@@ -256,7 +258,7 @@ class RadioPlayerService : Service() {
                 mediaPlayerAvailable = true
                 customContentRV.updateText(
                     R.id.notification_title,
-                    radiosList[currentRadioIndex].name
+                    currentRadio.name
                 )
                 customContentRV.togglePlayingVisibility(true)
                 start()
@@ -287,6 +289,7 @@ class RadioPlayerService : Service() {
                     if (response.isSuccessful) {
                         radiosList = response.body()?.radios ?: emptyList()
                         currentRadio = radiosList[currentRadioIndex]
+                        customContentRV.togglePlayingVisibility(true)
                         if (_mediaPlayer == null) initMediaPlayer()
                     } else {
                         Log.d(
@@ -319,8 +322,11 @@ class RadioPlayerService : Service() {
                     name ?: currentRadio.name
                 )
                 customContentRV.togglePlayingVisibility(true)
-                customContentRV.togglePlayingStatus(false)
-                radioMediaPlayerContract?.onPaused()
+                customContentRV.togglePlayingStatus(true)
+                start()
+                currentlyPlaying = true
+                radioMediaPlayerContract?.onPlayed(currentRadio)
+//                radioMediaPlayerContract?.onPaused(currentRadio)
             }
         }
     }
@@ -333,7 +339,7 @@ class RadioPlayerService : Service() {
 
     interface RadioMediaPlayerContract {
         fun onPlayed(radio: Radio)
-        fun onPaused()
+        fun onPaused(radio: Radio)
         fun onNextPlayed(radio: Radio)
         fun onPreviousPlayed(radio: Radio)
         fun onLoading()

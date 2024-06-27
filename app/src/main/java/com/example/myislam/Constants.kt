@@ -30,4 +30,6 @@ object Constants {
     const val INIT_SERVICE = 5
     const val CHANNEL_ID = "RadioFragChannelId"
     const val CHANNEL_NAME = "Radio Media Playback"
+
+    const val PACKAGE_NAME = "com.example.myislam"
 }

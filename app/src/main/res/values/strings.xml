@@ -14,4 +14,8 @@
     <string name="radio_player_description">this channel to display radio player</string>
     <string name="radio_default_title">Islami Radio Player</string>
     <string name="initial_radio_name">إذاعـة القـرآن الـكـريـم</string>
+    <string name="grant_permission_info_text">To use the radio service, we must grant the notificaiton permission first.</string>
+    <string name="grant_permission_btn_lable">Grant Permission</string>
+    <string name="enable_channel_lablel">Enable Channel</string>
+    <string name="enable_notification_channel_info_text">We still need the radio notification channel to be enabled before we play radios.</string>
 </resources>

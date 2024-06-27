@@ -1,6 +1,7 @@
 package com.example.myislam.radio
 
 import android.Manifest
+import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -10,11 +11,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -30,6 +31,7 @@ import com.example.myislam.databinding.FragmentRadioBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class RadioFragment : Fragment() {
     private lateinit var binding: FragmentRadioBinding
     private lateinit var sharedPreferences: SharedPreferences
@@ -39,6 +41,8 @@ class RadioFragment : Fragment() {
 
     private lateinit var notificationPermissionRequestLauncher: ActivityResultLauncher<String>
     private lateinit var notificationPermissionDialog: AlertDialog
+    private lateinit var notificationChannelDialog: AlertDialog
+    private var settingsOpenedToEnableChannel = false
 
 
     private val radioPlayerServiceConnection = object : ServiceConnection {
@@ -56,7 +60,6 @@ class RadioFragment : Fragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
         Intent(requireContext(), RadioPlayerService::class.java).also { intent ->
@@ -84,7 +87,27 @@ class RadioFragment : Fragment() {
         return binding.root
     }
 
-    var isShowing = false
+
+    private fun isNotificationChannelEnabled(): Boolean {
+        val notificationManager =
+            requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationChannel = notificationManager.getNotificationChannel(Constants.CHANNEL_ID)
+        return notificationChannel?.importance != NotificationManager.IMPORTANCE_NONE
+    }
+
+
+    private fun openSettingsToEnableNotificationChannel() {
+        val notificationManager =
+            requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationChannel = notificationManager.getNotificationChannel(Constants.CHANNEL_ID)
+
+        val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+            putExtra(Settings.EXTRA_APP_PACKAGE, Constants.PACKAGE_NAME)
+            putExtra(Settings.EXTRA_CHANNEL_ID, notificationChannel.id)
+        }
+        startActivity(intent)
+        settingsOpenedToEnableChannel = true
+    }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,9 +123,17 @@ class RadioFragment : Fragment() {
             "In order to play the radios, we need the notification permission",
             "Request again",
             {
-                isShowing = true
-                Toast.makeText(requireContext(), "again", Toast.LENGTH_SHORT).show()
                 notificationPermissionRequestLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            },
+            "No thanks"
+        )
+
+        notificationChannelDialog = createDialog(
+            "Notification Channel Disabled",
+            "The notifications channel needs to be enabled before sending notifications.",
+            "Enable",
+            {
+                openSettingsToEnableNotificationChannel()
             },
             "No thanks"
         )
@@ -110,18 +141,51 @@ class RadioFragment : Fragment() {
         notificationPermissionRequestLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { permissionGranted ->
-            if (permissionGranted) {
-                initRadioFragment()
-            }
+            if (!permissionGranted) return@registerForActivityResult
+
+            if (isNotificationChannelEnabled()) initRadioFragment()
+            else notificationChannelDialog.show()
         }
 
-        // Request permission if not granted
-        when {
+        // Request permission (or show rationale) if not granted
+        handleNotificationPermissionAndChannel()
+
+        binding.btnGrantPermission.setOnClickListener {
+            notificationPermissionRequestLauncher.launch(
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+        }
+
+        binding.btnEnableChannel.setOnClickListener { openSettingsToEnableNotificationChannel() }
+
+        binding.play.setOnClickListener { toggleRadioPlayer() }
+        binding.next.setOnClickListener { playNextRadio() }
+        binding.previous.setOnClickListener { playPreviousRadio() }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        // check channel status on return
+        if (settingsOpenedToEnableChannel) {
+            if (isNotificationChannelEnabled()) showMainFragmentUI()
+        }
+    }
+
+    private fun handleNotificationPermissionAndChannel(): Boolean {
+        return when {
+            !isNotificationChannelEnabled() -> {
+                showDisabledChannelUI()
+                notificationChannelDialog.show()
+                false
+            }
+
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED -> {
                 initRadioFragment()
+                true
             }
 
             ActivityCompat.shouldShowRequestPermissionRationale(
@@ -129,21 +193,32 @@ class RadioFragment : Fragment() {
                 Manifest.permission.POST_NOTIFICATIONS
             ) -> {
                 notificationPermissionDialog.show()
+                false
             }
 
-            else -> notificationPermissionRequestLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            else -> {
+                notificationPermissionRequestLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                false
+            }
         }
-
-        binding.play.setOnClickListener { toggleRadioPlayer() }
-        binding.next.setOnClickListener { playNextRadio() }
-        binding.previous.setOnClickListener { playPreviousRadio() }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun initRadioFragment() {
         // show proper UI and start service
-        Toast.makeText(requireContext(), "radio running", Toast.LENGTH_SHORT).show()
+        showMainFragmentUI()
         initRadioService()
+    }
+
+    private fun showMainFragmentUI() {
+        binding.mainUiDesign.isVisible = true
+        binding.noPermissionUiDesign.isVisible = false
+        binding.disabledChannelUiDesign.isVisible = false
+    }
+
+    private fun showDisabledChannelUI() {
+        binding.mainUiDesign.isVisible = false
+        binding.noPermissionUiDesign.isVisible = false
+        binding.disabledChannelUiDesign.isVisible = true
     }
 
     private fun createDialog(
@@ -168,7 +243,6 @@ class RadioFragment : Fragment() {
             .create()
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun initRadioService() {
         val serviceIntent = Intent(requireContext(), RadioPlayerService::class.java)
         serviceIntent.putExtra(Constants.START_ACTION, Constants.INIT_SERVICE)
@@ -187,9 +261,10 @@ class RadioFragment : Fragment() {
                 binding.izaaTv.text = radio.name
             }
 
-            override fun onPaused() {
+            override fun onPaused(radio: Radio) {
                 togglePlayingVisibility(true)
                 togglePlayingStatus(false)
+                binding.izaaTv.text = radio.name
             }
 
             override fun onNextPlayed(radio: Radio) {
@@ -211,12 +286,16 @@ class RadioFragment : Fragment() {
     }
 
     private fun toggleRadioPlayer() {
+        if (!handleNotificationPermissionAndChannel()) return
+
         if (isRadioPlayerServiceBound) {
             radioPlayerService.playOrPauseRadio()
         }
     }
 
     private fun playPreviousRadio() {
+        if (!handleNotificationPermissionAndChannel()) return
+
         if (isRadioPlayerServiceBound) {
             radioPlayerService.playPreviousRadio()
             togglePlayingVisibility(false)
@@ -225,6 +304,8 @@ class RadioFragment : Fragment() {
     }
 
     private fun playNextRadio() {
+        if (!handleNotificationPermissionAndChannel()) return
+
         if (isRadioPlayerServiceBound) {
             radioPlayerService.playNextRadio()
             togglePlayingVisibility(false)
