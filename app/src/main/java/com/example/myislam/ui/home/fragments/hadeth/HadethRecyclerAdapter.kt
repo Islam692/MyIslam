@@ -7,40 +7,33 @@ import com.example.myislam.data.models.Hadeth
 import com.example.myislam.databinding.ItemHadethBinding
 
 class HadethRecyclerAdapter(
-    private var items: List<Hadeth>?
+    private var hadethList: List<Hadeth>
 ) :
-    RecyclerView.Adapter<HadethRecyclerAdapter.viewHolder>() {
+    RecyclerView.Adapter<HadethRecyclerAdapter.ViewHolder>() {
 
-    var onItemClickListener: OnItemClickListener? = null
+    private var onHadethClickListener: OnHadethClickListener? = null
 
-    fun interface OnItemClickListener {
-        fun onItemClick(position: Int, item: Hadeth)
+    fun setOnHadethClickListener(onHadethClickListener: OnHadethClickListener) {
+        this.onHadethClickListener = onHadethClickListener
     }
 
-    class viewHolder(val viewBinding: ItemHadethBinding) :
-        RecyclerView.ViewHolder(viewBinding.root) {
-
+    fun interface OnHadethClickListener {
+        fun onHadethClick(hadeth: Hadeth)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewHolder {
+    class ViewHolder(val binding: ItemHadethBinding) : RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewBinding =
             ItemHadethBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return viewHolder(viewBinding)
+        return ViewHolder(viewBinding)
     }
 
-    override fun getItemCount(): Int = items?.size ?: 0
+    override fun getItemCount(): Int = hadethList.size
 
-    fun bindItems(newList: List<Hadeth>) {
-        items = newList
-        notifyDataSetChanged()
-    }
-
-    override fun onBindViewHolder(holder: viewHolder, position: Int) {
-        holder.viewBinding.title.text = items!![position].title
-        if (onItemClickListener != null) {
-            holder.viewBinding.root.setOnClickListener {
-                onItemClickListener?.onItemClick(position, items!![position])
-            }
-        }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val hadeth = hadethList[position]
+        holder.binding.title.text = hadeth.title
+        holder.binding.root.setOnClickListener { onHadethClickListener?.onHadethClick(hadeth) }
     }
 }

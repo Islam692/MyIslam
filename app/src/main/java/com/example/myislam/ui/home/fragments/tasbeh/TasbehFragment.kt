@@ -5,60 +5,84 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.myislam.R
 import com.example.myislam.databinding.FragmentTasbehBinding
+import com.example.myislam.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class TasbehFragment : Fragment() {
-    lateinit var viewBinding: FragmentTasbehBinding
-    var times_clicked = 0
+    private var _binding: FragmentTasbehBinding? = null
+    private val binding: FragmentTasbehBinding get() = _binding!!
+
+    @Inject
+    lateinit var utils: Utils
+
+    private var clickCounter = 0
+    private lateinit var mediaPlayer: MediaPlayer
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewBinding = FragmentTasbehBinding.inflate(layoutInflater, container, false)
-        return viewBinding.root
+    ): View {
+        _binding = FragmentTasbehBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.subhan_allah)
-        mediaPlayer.start()
-        viewBinding.counter.setOnClickListener {
-            startTasbeh()
+        mediaPlayer = MediaPlayer()
+
+        initializeViews()
+
+        binding.root.setOnClickListener { countTasbeh() }
+    }
+
+    private fun initializeViews() {
+        binding.tvTasbeh.text = getString(R.string.tasbeeh_text)
+        binding.counter.text = clickCounter.toString()
+        binding.progressBar.progress = clickCounter
+        playSound(R.raw.subhan_allah)
+    }
+
+    private fun countTasbeh() {
+        clickCounter++
+        binding.counter.text = clickCounter.toString()
+        binding.progressBar.incrementProgressBy(1)
+
+        when (clickCounter) {
+            33 -> updateZekr(R.string.hamd_text, R.raw.alhamd_lullah)
+            66 -> updateZekr(R.string.takbeer_text, R.raw.allah_akbr)
+
+            100 -> {
+                clickCounter = 0
+                utils.showShortToast(getString(R.string.tahleel_text))
+                updateZekr(R.string.tasbeeh_text, R.raw.la_elah_ala_allah)
+            }
         }
     }
 
-    private fun startTasbeh() {
-        times_clicked++
-        viewBinding.counter.text = times_clicked.toString()
-        viewBinding.progressBar.incrementProgressBy(3)
-        if (times_clicked == 33) {
-            viewBinding.tvTasbeh.text = "لله\nالحمد"
-            viewBinding.progressBar.progress = 0
-            viewBinding.progressBar.incrementProgressBy(0)
-            var mediaplayer = MediaPlayer.create(context, R.raw.alhamd_lullah)
-            mediaplayer.start()
-        } else if (times_clicked == 66) {
-            viewBinding.tvTasbeh.text = "الله\nأكبر"
-            viewBinding.progressBar.progress = 0
-            viewBinding.progressBar.incrementProgressBy(0)
-            var mediaplayer = MediaPlayer.create(context, R.raw.allah_akbr)
-            mediaplayer.start()
-        } else if (times_clicked == 100) {
-            times_clicked = 0
-            viewBinding.tvTasbeh.text = "الله\nسبحان"
-            viewBinding.progressBar.progress = 0
-            viewBinding.progressBar.incrementProgressBy(0)
-            var mediaplayer = MediaPlayer.create(context, R.raw.la_elah_ala_allah)
-            mediaplayer.start()
-            Toast.makeText(
-                context,
-                "التسبيحة المائة \n لا اله الا الله له الملك وله الحمد",
-                Toast.LENGTH_LONG
-            ).show()
-        }
+    private fun playSound(rawResId: Int) {
+        mediaPlayer.reset()
+
+        val assetFileDescriptor = resources.openRawResourceFd(rawResId)
+        mediaPlayer.setDataSource(
+            assetFileDescriptor.fileDescriptor,
+            assetFileDescriptor.startOffset,
+            assetFileDescriptor.length
+        )
+        assetFileDescriptor.close()
+
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener { it.start() }
+    }
+
+    private fun updateZekr(zekrTextResId: Int, zekrAudioResId: Int) {
+        binding.tvTasbeh.text = getString(zekrTextResId)
+        binding.progressBar.setProgress(0, true)
+        playSound(zekrAudioResId)
     }
 }

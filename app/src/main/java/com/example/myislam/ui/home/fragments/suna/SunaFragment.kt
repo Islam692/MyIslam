@@ -8,17 +8,15 @@ import androidx.fragment.app.Fragment
 import com.example.myislam.databinding.FragmentSunaBinding
 
 class SunaFragment : Fragment() {
-    lateinit var viewBinding: FragmentSunaBinding
+    private var _binding: FragmentSunaBinding? = null
+    private val binding: FragmentSunaBinding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewBinding = FragmentSunaBinding.inflate(layoutInflater, container, false)
-        return viewBinding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    ): View {
+        _binding = FragmentSunaBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 }

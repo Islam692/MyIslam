@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.myislam.data.data_providers.quran_sura.QuranSuraDataProvider
 import com.example.myislam.data.models.QuranSura
 import com.example.myislam.databinding.FragmentQuranBinding
 import com.example.myislam.ui.sura.SuraActivity

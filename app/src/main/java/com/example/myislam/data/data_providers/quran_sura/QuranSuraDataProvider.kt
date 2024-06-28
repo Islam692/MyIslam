@@ -1,4 +1,4 @@
-package com.example.myislam.ui.home.fragments.quran
+package com.example.myislam.data.data_providers.quran_sura
 
 import com.example.myislam.data.models.QuranSura
 

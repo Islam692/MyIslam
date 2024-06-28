@@ -33,7 +33,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.splash.SplashScreen"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
