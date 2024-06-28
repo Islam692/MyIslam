@@ -6,8 +6,8 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myislam.Constants
 import com.example.myislam.R
+import com.example.myislam.data.models.Hadeth
 import com.example.myislam.databinding.ActivityHadethDetailsBinding
-import com.example.myislam.model.Hadeth
 
 class HadethDetailsActivity : AppCompatActivity() {
     lateinit var viewBinding: ActivityHadethDetailsBinding

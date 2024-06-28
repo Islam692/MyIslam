@@ -1,13 +1,13 @@
 package com.example.myislam
 
 object Constants {
-    const val EXTRA_CHAPTER_INDEX = "index"
-    const val EXTRA_CHAPTER_NAME = "name"
-    const val EXTRA_CHAPTER_NUMBER = "number"
-    const val EXTRA_CHAPTER_COUNTER = "counter"
+    // Sura Activity
+    const val SURA_POSITION = "suraPosition"
+    const val SURA = "sura"
 
     const val EXTRA_HADETH = "hadeth"
 
+    // Language Codes
     const val ARABIC_LANG_CODE = "ar"
     const val ENGLISH_LANG_CODE = "en"
     const val API_ENGLISH_LANG_CODE = "eng"

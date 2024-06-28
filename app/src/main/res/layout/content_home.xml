@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_bg"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".home.HomeActivity"
+    tools:context=".ui.home.HomeActivity"
     tools:showIn="@layout/activity_home">
 
     <FrameLayout
