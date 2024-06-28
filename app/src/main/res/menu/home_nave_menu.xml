@@ -9,8 +9,8 @@
 
     <item
         android:id="@+id/navigation_hadeth"
-        android:icon="@drawable/hadeth"
         android:checked="false"
+        android:icon="@drawable/hadeth"
         android:title="@string/hadeth" />
     <item
         android:id="@+id/navigation_quran"
@@ -20,13 +20,13 @@
 
     <item
         android:id="@+id/navigation_tasbeh"
-        android:icon="@drawable/sebha"
         android:checked="false"
+        android:icon="@drawable/sebha"
         android:title="@string/sebha" />
 
     <item
         android:id="@+id/navigation_radio"
-        android:icon="@drawable/radio"
         android:checked="false"
+        android:icon="@drawable/radio"
         android:title="@string/radio" />
 </menu>
