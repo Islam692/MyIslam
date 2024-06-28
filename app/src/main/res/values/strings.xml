@@ -1,28 +1,32 @@
 <resources>
     <string name="app_name">My Islam</string>
-    <string name="quran" translatable="true">الْقُرْآنِ الْكَرِيمِ</string>
-    <string name="hadeth" translatable="true">الْأَحَادِيث</string>
-    <string name="sebha" translatable="true">السُّبْحَة</string>
-    <string name="radio" translatable="true">الْإِذَاعَة</string>
-    <string name="suna" translatable="true">السُّنَّة</string>
-    <string name="changelanguage" translatable="false">تغير اللغة</string>
-    <string name="darkmode">الوضع الليلى</string>
-    <string name="sunahadeth">قال ﷺ (فيما رواه الترمزى وصححه الألبانى)</string>
-    <string name="hadethforsuna">«مَن صلَّى ثِنتَي عشرةَ رَكْعةً ، في يومٍ وليلةٍ ، بنَى اللَّهُ لَه بيتًا في الجنَّةِ»</string>
-    <string name="infoforsuna">أربع قبل الظهر وركعتين بعدها وركعتين بعد المغرب وركعتين بعد العشاء وركعتين قبل الفجر.</string>
-    <string name="radio_player_channel">Radio channel</string>
-    <string name="radio_player_description">this channel to display radio player</string>
+    <string name="quran">Quran</string>
+    <string name="hadeth">Hadeth</string>
+    <string name="sebha">Tasbeh</string>
+    <string name="radio">Radio</string>
+    <string name="suna">Suna</string>
+    <string name="changelanguage">Change Language</string>
+    <string name="darkmode">Dark Mode</string>
+    <string name="sunahadeth" translatable="false">قال ﷺ (فيما رواه الترمزى وصححه الألبانى)</string>
+    <string name="hadethforsuna" translatable="false">«مَن صلَّى ثِنتَي عشرةَ رَكْعةً ، في يومٍ وليلةٍ ، بنَى اللَّهُ لَه بيتًا في الجنَّةِ»</string>
+    <string name="infoforsuna" translatable="false">أربع قبل الظهر وركعتين بعدها وركعتين بعد المغرب وركعتين بعد العشاء وركعتين قبل الفجر.</string>
     <string name="radio_default_title">Islami Radio Player</string>
-    <string name="initial_radio_name">إذاعـة القـرآن الـكـريـم</string>
-    <string name="grant_permission_info_text">To use the radio service, we must grant the notificaiton permission first.</string>
+    <string name="initial_radio_name" translatable="false">إذاعـة القـرآن الـكـريـم</string>
+    <string name="grant_permission_info_text">To use the radio service, we must grant the notification permission first.</string>
     <string name="grant_permission_btn_lable">Grant Permission</string>
     <string name="enable_channel_lablel">Enable Channel</string>
     <string name="enable_notification_channel_info_text">We still need the radio notification channel to be enabled before we play radios.</string>
-    <string name="basmala_text">بسم الله الرحمن الرحيم</string>
-    <string name="sura_counter_label_text">عدد اياتها</string>
-    <string name="sura_number_label_text">رقمها</string>
-    <string name="hamd_text">لله\nالحمد</string>
-    <string name="takbeer_text">الله\nأكبر</string>
-    <string name="tasbeeh_text">الله\nسبحان</string>
-    <string name="tahleel_text">التسبيحة المائة \n لا اله الا الله له الملك وله الحمد</string>
+    <string name="basmala_text" translatable="false">بسم الله الرحمن الرحيم</string>
+    <string name="sura_counter_label_text">Verses</string>
+    <string name="sura_number_label_text">Number</string>
+    <string name="hamd_text" translatable="false">لله\nالحمد</string>
+    <string name="takbeer_text" translatable="false">الله\nأكبر</string>
+    <string name="tasbeeh_text" translatable="false">الله\nسبحان</string>
+    <string name="tahleel_text" translatable="false">التسبيحة المائة \n لا اله الا الله له الملك وله الحمد</string>
+    <string name="an_image_of_a_radio_station">An image of a radio station</string>
+    <string name="the_play_button">The play/pause button</string>
+    <string name="the_play_next_button">The play next button</string>
+    <string name="the_play_previous_button">The play previous button</string>
+    <string name="an_image_of_a_problem">An image of a problem</string>
+    <string name="the_close_button">The close button</string>
 </resources>

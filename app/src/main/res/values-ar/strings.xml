@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">اسلامي</string>
+    <string name="quran">الْقُرْآنِ الْكَرِيم</string>
     <string name="radio_default_title">مشغل إذاعة إسلامي</string>
+    <string name="hadeth">الْأَحَادِيث</string>
+    <string name="sebha">السُّبْحَة</string>
+    <string name="radio">الْإِذَاعَ</string>
+    <string name="suna">السُّنَّة</string>
+    <string name="changelanguage">تغير اللغة</string>
+    <string name="darkmode">الوضع الليلى</string>
+    <string name="grant_permission_info_text">"لكي تستخدم خدمة الإذاعة، عليك اولا اعطاء اذن الاشعارات. "</string>
+    <string name="grant_permission_btn_lable">اعطاء الاذن</string>
+    <string name="enable_channel_lablel">تفعيل القناة</string>
+    <string name="enable_notification_channel_info_text">ما زلنا نحتاج الى ان تكون قناة الاذاعة مفقعلة قبل ان نشغل الخدمة.</string>
+    <string name="sura_counter_label_text">عدد اياتها</string>
+    <string name="sura_number_label_text">رقمها</string>
+    <string name="an_image_of_a_radio_station">صورة لمحطة اذاعة</string>
+    <string name="the_play_button">زر التشغيل والايقاف</string>
+    <string name="the_play_next_button">زر تشغيل التالي</string>
+    <string name="the_play_previous_button">زر تشغيل السابق</string>
+    <string name="an_image_of_a_problem">صورة لمشكلة</string>
+    <string name="the_close_button">زر الاغلاق</string>
 </resources>
