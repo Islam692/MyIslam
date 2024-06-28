@@ -9,13 +9,6 @@ import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import android.widget.RemoteViews
-import com.example.myislam.Constants.CLOSE_ACTION
-import com.example.myislam.Constants.INIT_SERVICE
-import com.example.myislam.Constants.NEXT_ACTION
-import com.example.myislam.Constants.PLAY_ACTION
-import com.example.myislam.Constants.PREVIOUS_ACTION
-import com.example.myislam.Constants.RADIO_SERVICE_ID
-import com.example.myislam.Constants.START_ACTION
 import com.example.myislam.R
 import com.example.myislam.data.radio_api.api.ApiManager
 import com.example.myislam.data.radio_api.models.Radio
@@ -25,6 +18,13 @@ import com.example.myislam.ui.home.fragments.radio.NotificationRemoteViewHelper.
 import com.example.myislam.ui.home.fragments.radio.NotificationRemoteViewHelper.showPauseButton
 import com.example.myislam.ui.home.fragments.radio.NotificationRemoteViewHelper.showPlayButton
 import com.example.myislam.ui.home.fragments.radio.NotificationRemoteViewHelper.showPlayPauseButton
+import com.example.myislam.utils.Constants.CLOSE_ACTION
+import com.example.myislam.utils.Constants.INIT_SERVICE
+import com.example.myislam.utils.Constants.NEXT_ACTION
+import com.example.myislam.utils.Constants.PLAY_ACTION
+import com.example.myislam.utils.Constants.PREVIOUS_ACTION
+import com.example.myislam.utils.Constants.RADIO_SERVICE_ID
+import com.example.myislam.utils.Constants.START_ACTION
 import com.example.myislam.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call

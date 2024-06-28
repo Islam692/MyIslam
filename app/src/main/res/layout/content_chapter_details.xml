@@ -1,147 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="2dp"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_chapter_details">
+    tools:showIn="@layout/activity_sura">
 
-    <TextView
-        android:id="@+id/sura_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="4dp"
-        android:fontFamily="@font/ge_ss_two_bold"
-        android:text="الْفَاتِحَةِ"
-        android:textColor="#DCB486"
-        android:gravity="center"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <ImageView
-        android:id="@+id/sura_play"
-        android:layout_width="40sp"
-        android:layout_height="40dp"
-        android:src="@drawable/baseline_play_arrow_24"
-        app:layout_constraintBottom_toBottomOf="@+id/sura_name"
-        app:layout_constraintStart_toEndOf="@id/sura_name"
-        app:layout_constraintTop_toTopOf="@id/sura_name" />
+        <variable
+            name="sura"
+            type="com.example.myislam.data.models.QuranSura" />
+    </data>
 
-    <TextView
-        android:id="@+id/sura_counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:fontFamily="@font/ge_ss_two_bold"
-        android:text="عدد اياتها"
-        android:textColor="#DCB486"
-        android:textSize="21sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/sura_name"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/sura_countern"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:layout_marginEnd="10dp"
-        android:fontFamily="@font/ge_ss_two_bold"
-        android:text="7"
-        android:textColor="#DCB486"
-        android:textSize="21sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/sura_counter"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/sura_fehres"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:layout_marginStart="50dp"
-        android:fontFamily="@font/ge_ss_two_bold"
-        android:text="رقمها"
-        android:textColor="#DCB486"
-        android:textSize="21sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/sura_fehresn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:layout_marginStart="30dp"
-        android:fontFamily="@font/ge_ss_two_bold"
-        android:text="1"
-        android:textColor="#DCB486"
-        android:textSize="21sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="355dp"
-        android:layout_height="2dp"
-        android:layout_marginVertical="2dp"
-        android:background="#DCB486"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sura_fehresn" />
-
-    <TextView
-        android:id="@+id/basmala"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="4dp"
-        android:background="@drawable/text_bg"
-        android:fontFamily="@font/dthullth_ii_1"
-        android:gravity="center"
-        android:text="بسم الله الرحمن الرحيم"
-        android:letterSpacing=".3"
-        android:textColor="#DCB486"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/card_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view" />
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginVertical="4dp"
-        android:backgroundTint="#332C3D4A"
-        android:elevation="24dp"
-        app:cardCornerRadius="24dp"
-        app:contentPadding="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".8"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/basmala"
-        app:layout_constraintWidth_percent="1">
+        <TextView
+            android:id="@+id/sura_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="4dp"
+            android:fontFamily="@font/ge_ss_two_bold"
+            android:gravity="center"
+            android:text="@{sura.name}"
+            android:textColor="#DCB486"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="الْفَاتِحَةِ" />
 
+        <!--        <ImageView-->
+        <!--            android:id="@+id/sura_play"-->
+        <!--            android:layout_width="40sp"-->
+        <!--            android:layout_height="40dp"-->
+        <!--            android:src="@drawable/baseline_play_arrow_24"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/sura_name"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/sura_name"-->
+        <!--            app:layout_constraintTop_toTopOf="@id/sura_name" />-->
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/verses_recycler_view"
+        <TextView
+            android:id="@+id/sura_counter_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="50dp"
+            android:fontFamily="@font/ge_ss_two_bold"
+            android:text="@string/sura_counter_label_text"
+            android:textColor="#DCB486"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/sura_name"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/sura_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="50dp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/ge_ss_two_bold"
+            android:text="@{sura.ayaCount}"
+            android:textColor="#DCB486"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/sura_counter_label"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="7" />
+
+        <TextView
+            android:id="@+id/sura_number_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="50dp"
+            android:layout_marginStart="50dp"
+            android:fontFamily="@font/ge_ss_two_bold"
+            android:text="@string/sura_number_label_text"
+            android:textColor="#DCB486"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/sura_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="50dp"
+            android:layout_marginStart="30dp"
+            android:fontFamily="@font/ge_ss_two_bold"
+            android:text="@{sura.number}"
+            android:textColor="#DCB486"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="355dp"
+            android:layout_height="2dp"
+            android:layout_marginVertical="2dp"
+            android:background="#DCB486"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sura_number" />
+
+        <TextView
+            android:id="@+id/basmala"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_verse">
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="4dp"
+            android:background="@drawable/text_bg"
+            android:fontFamily="@font/dthullth_ii_1"
+            android:gravity="center"
+            android:letterSpacing=".3"
+            android:text="@string/basmala_text"
+            android:textColor="#DCB486"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/card_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view" />
 
-        </androidx.recyclerview.widget.RecyclerView>
-    </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="4dp"
+            android:backgroundTint="#332C3D4A"
+            android:elevation="24dp"
+            app:cardCornerRadius="24dp"
+            app:contentPadding="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent=".8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/basmala"
+            app:layout_constraintWidth_percent="1">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/verses_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_verse">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

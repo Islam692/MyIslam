@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.myislam.Constants
-import com.example.myislam.chapterDetails.ChapterDetailsActivity
 import com.example.myislam.data.models.QuranSura
 import com.example.myislam.databinding.FragmentQuranBinding
+import com.example.myislam.ui.sura.SuraActivity
+import com.example.myislam.utils.Constants
 
 class QuranFragment : Fragment() {
     private var _binding: FragmentQuranBinding? = null
@@ -36,7 +36,7 @@ class QuranFragment : Fragment() {
     }
 
     private fun startSuraActivity(position: Int, sura: QuranSura) {
-        val intent = Intent(requireContext(), ChapterDetailsActivity::class.java).apply {
+        val intent = Intent(requireContext(), SuraActivity::class.java).apply {
             putExtra(Constants.SURA_POSITION, position)
             putExtra(Constants.SURA, sura)
         }

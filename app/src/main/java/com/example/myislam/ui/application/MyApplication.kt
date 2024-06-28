@@ -1,4 +1,4 @@
-package com.example.myislam
+package com.example.myislam.ui.application
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

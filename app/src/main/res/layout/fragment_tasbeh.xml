@@ -37,7 +37,7 @@
 
 
     <TextView
-        android:id="@+id/sura_number"
+        android:id="@+id/counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"

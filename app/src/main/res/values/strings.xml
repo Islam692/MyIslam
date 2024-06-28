@@ -18,4 +18,7 @@
     <string name="grant_permission_btn_lable">Grant Permission</string>
     <string name="enable_channel_lablel">Enable Channel</string>
     <string name="enable_notification_channel_info_text">We still need the radio notification channel to be enabled before we play radios.</string>
+    <string name="basmala_text">بسم الله الرحمن الرحيم</string>
+    <string name="sura_counter_label_text">عدد اياتها</string>
+    <string name="sura_number_label_text">رقمها</string>
 </resources>

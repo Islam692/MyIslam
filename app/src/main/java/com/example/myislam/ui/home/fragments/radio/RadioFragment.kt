@@ -24,10 +24,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.example.myislam.Constants
 import com.example.myislam.R
 import com.example.myislam.data.radio_api.models.Radio
 import com.example.myislam.databinding.FragmentRadioBinding
+import com.example.myislam.utils.Constants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -105,7 +105,7 @@ class RadioFragment : Fragment() {
         val notificationChannel = notificationManager.getNotificationChannel(Constants.CHANNEL_ID)
 
         val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
-            putExtra(Settings.EXTRA_APP_PACKAGE, Constants.PACKAGE_NAME)
+            putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
             putExtra(Settings.EXTRA_CHANNEL_ID, notificationChannel.id)
         }
         startActivity(intent)

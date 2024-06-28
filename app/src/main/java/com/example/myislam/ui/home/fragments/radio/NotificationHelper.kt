@@ -10,11 +10,11 @@ import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import com.example.myislam.Constants.CHANNEL_ID
-import com.example.myislam.Constants.CHANNEL_NAME
-import com.example.myislam.Constants.RADIO_SERVICE_ID
 import com.example.myislam.R
 import com.example.myislam.ui.home.HomeActivity
+import com.example.myislam.utils.Constants.CHANNEL_ID
+import com.example.myislam.utils.Constants.CHANNEL_NAME
+import com.example.myislam.utils.Constants.RADIO_SERVICE_ID
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

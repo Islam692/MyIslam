@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.RemoteViews
-import com.example.myislam.Constants.CLOSE_ACTION
-import com.example.myislam.Constants.NEXT_ACTION
-import com.example.myislam.Constants.PLAY_ACTION
-import com.example.myislam.Constants.PREVIOUS_ACTION
-import com.example.myislam.Constants.START_ACTION
 import com.example.myislam.R
+import com.example.myislam.utils.Constants.CLOSE_ACTION
+import com.example.myislam.utils.Constants.NEXT_ACTION
+import com.example.myislam.utils.Constants.PLAY_ACTION
+import com.example.myislam.utils.Constants.PREVIOUS_ACTION
+import com.example.myislam.utils.Constants.START_ACTION
 
 /**
  * A helper class to simplify the process of updating and interacting with RemoteViews,

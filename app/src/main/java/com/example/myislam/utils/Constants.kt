@@ -1,21 +1,22 @@
-package com.example.myislam
+package com.example.myislam.utils
 
 object Constants {
     // Sura Activity
     const val SURA_POSITION = "suraPosition"
     const val SURA = "sura"
 
-    const val EXTRA_HADETH = "hadeth"
+    // Hadeth Activity
+    const val HADETH = "hadeth"
 
     // Language Codes
     const val ARABIC_LANG_CODE = "ar"
     const val ENGLISH_LANG_CODE = "en"
     const val API_ENGLISH_LANG_CODE = "eng"
 
-    const val SAVED_RADIO_NAME = "SavedName"
-    const val SAVED_RADIO_URL = "SavedUrl"
+    // Shared Preferences
     const val SETTINGS_FILE_NAME = "com.example.myislam.SettingsFile"
 
+    // Radio Fragment
     const val RADIOS_ENDPOINT = "radios"
     const val LANGUAGE_PARAM = "language"
     const val RADIOS_WEB_API_URL = "https://mp3quran.net/api/v3/"
@@ -30,6 +31,4 @@ object Constants {
     const val INIT_SERVICE = 5
     const val CHANNEL_ID = "RadioFragChannelId"
     const val CHANNEL_NAME = "Radio Media Playback"
-
-    const val PACKAGE_NAME = "com.example.myislam"
 }

@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.myislam.R
 import com.example.myislam.databinding.ActivityHomeBinding
-import com.example.myislam.settings.SettingsFragment
 import com.example.myislam.ui.home.fragments.hadeth.HadethFragment
 import com.example.myislam.ui.home.fragments.quran.QuranFragment
 import com.example.myislam.ui.home.fragments.radio.RadioFragment
@@ -49,9 +48,6 @@ class HomeActivity : AppCompatActivity() {
                 R.id.navigation_suna -> {
                     showTabFragment(SunaFragment())
                 }
-            }
-            viewBinding.imgSettings.setOnClickListener {
-                showTabFragment(SettingsFragment())
             }
             true
         }
