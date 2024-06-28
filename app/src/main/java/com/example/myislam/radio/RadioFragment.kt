@@ -29,9 +29,11 @@ import com.example.myislam.R
 import com.example.myislam.api.Radio
 import com.example.myislam.databinding.FragmentRadioBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@AndroidEntryPoint
 class RadioFragment : Fragment() {
     private lateinit var binding: FragmentRadioBinding
     private lateinit var sharedPreferences: SharedPreferences
@@ -49,7 +51,7 @@ class RadioFragment : Fragment() {
     private val radioPlayerServiceConnection = object : ServiceConnection {
 
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as RadioPlayerService.LocalBinder
+            val binder = service as RadioPlayerService.RadioPlayerBinder
             radioPlayerService = binder.getService()
             isRadioPlayerServiceBound = true
             defineRadioPlayerServiceContract()
@@ -252,8 +254,8 @@ class RadioFragment : Fragment() {
     }
 
     private fun defineRadioPlayerServiceContract() {
-        radioPlayerService.defineRadioMediaPlayerContract(object :
-            RadioPlayerService.RadioMediaPlayerContract {
+        radioPlayerService.setRadioPlayerCallback(object :
+            RadioPlayerService.RadioPlayerCallback {
             override fun onPlayed(radio: Radio) {
                 togglePlayingVisibility(true)
                 togglePlayingStatus(true)
