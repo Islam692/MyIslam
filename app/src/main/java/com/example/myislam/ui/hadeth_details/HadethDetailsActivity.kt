@@ -2,6 +2,7 @@ package com.example.myislam.ui.hadeth_details
 
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myislam.data.models.Hadeth
 import com.example.myislam.databinding.ActivityHadethDetailsBinding
@@ -13,6 +14,7 @@ class HadethDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         _binding = ActivityHadethDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
