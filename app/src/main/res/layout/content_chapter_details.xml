@@ -46,59 +46,58 @@
             android:id="@+id/sura_counter_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="50dp"
+            android:layout_marginEnd="8dp"
             android:fontFamily="@font/ge_ss_two_bold"
             android:text="@string/sura_counter_label_text"
             android:textColor="#DCB486"
             android:textSize="21sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/sura_name"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@id/sura_counter"
+            app:layout_constraintEnd_toStartOf="@id/sura_counter"
+            app:layout_constraintTop_toTopOf="@id/sura_counter" />
 
         <TextView
             android:id="@+id/sura_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="50dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="32dp"
             android:fontFamily="@font/ge_ss_two_bold"
-            android:text="@{sura.ayaCount}"
+            android:text="@{Integer.toString(sura.ayaCount)}"
             android:textColor="#DCB486"
             android:textSize="21sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/sura_counter_label"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sura_name"
             tools:text="7" />
 
         <TextView
             android:id="@+id/sura_number_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="50dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="8dp"
             android:fontFamily="@font/ge_ss_two_bold"
             android:text="@string/sura_number_label_text"
             android:textColor="#DCB486"
             android:textSize="21sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@id/sura_number"
+            app:layout_constraintStart_toEndOf="@id/sura_number"
+            app:layout_constraintTop_toTopOf="@id/sura_number" />
 
         <TextView
             android:id="@+id/sura_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="50dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="12dp"
             android:fontFamily="@font/ge_ss_two_bold"
-            android:text="@{sura.number}"
+            android:text="@{Integer.toString(sura.number)}"
             android:textColor="#DCB486"
             android:textSize="21sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sura_name"
             tools:text="1" />
 
         <View
@@ -149,6 +148,7 @@
                 android:id="@+id/verses_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_verse">
 

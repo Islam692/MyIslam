@@ -132,9 +132,14 @@ class RadioFragment : Fragment() {
         defineDialogs()
         defineNotificationPermissionRequestCallback()
         setButtonsClickListeners()
+        startTextViewMarquee() // Marquee: The horizontal movement of long texts
 
         // Request permission (or show rationale) if not granted
         handleNotificationPermissionAndChannel()
+    }
+
+    private fun startTextViewMarquee() {
+        binding.radioNameTextView.isSelected = true
     }
 
     private fun setButtonsClickListeners() {
