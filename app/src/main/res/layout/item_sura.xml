@@ -12,7 +12,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layoutDirection="ltr">
 
         <TextView
             android:id="@+id/sura_number"
@@ -21,7 +22,7 @@
             android:fontFamily="@font/ge_ss_two_bold"
             android:gravity="center"
             android:padding="8dp"
-            android:text="@{sura.number}"
+            android:text="@{Integer.toString(sura.number)}"
             android:textColor="#DCB486"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -97,7 +98,7 @@
             android:fontFamily="@font/ge_ss_two_bold"
             android:gravity="center"
             android:padding="8dp"
-            android:text="@{sura.ayaCount}"
+            android:text="@{Integer.toString(sura.ayaCount)}"
             android:textColor="#DCB486"
             android:textSize="24sp"
             android:textStyle="bold"

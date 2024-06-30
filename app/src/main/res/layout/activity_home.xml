@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
-        android:elevation="0dp">
+        android:elevation="0dp"
+        android:fitsSystemWindows="true"
+        app:liftOnScrollColor="@color/transparent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -57,6 +59,7 @@
             app:itemActiveIndicatorStyle="@null"
             app:itemIconSize="30dp"
             app:itemIconTint="@color/bottom_nav_colors"
+            app:itemRippleColor="@color/transparent"
             app:itemTextAppearanceActive="@style/MyTextAppearance"
             app:itemTextAppearanceInactive="@style/MyTextAppearance"
             app:itemTextColor="@color/bottom_nav_colors"

@@ -2,7 +2,12 @@ package com.example.myislam.ui.sura
 
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.example.myislam.data.models.QuranSura
 import com.example.myislam.databinding.ActivitySuraBinding
 import com.example.myislam.utils.Constants
@@ -13,11 +18,31 @@ class SuraActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         _binding = ActivitySuraBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        adjustLayoutForSystemBars()
 
         bindSura(getSura())
         bindVerses(getSuraAyat())
+    }
+
+    private fun adjustLayoutForSystemBars() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val windowInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(
+                windowInsets.left,
+                windowInsets.top,
+                windowInsets.right,
+                windowInsets.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+
+        windowInsetsController.isAppearanceLightNavigationBars = false
+        windowInsetsController.isAppearanceLightStatusBars = false
     }
 
     private fun bindSura(sura: QuranSura?) {

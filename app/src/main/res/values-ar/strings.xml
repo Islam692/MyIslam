@@ -21,4 +21,13 @@
     <string name="the_play_previous_button">زر تشغيل السابق</string>
     <string name="an_image_of_a_problem">صورة لمشكلة</string>
     <string name="the_close_button">زر الاغلاق</string>
+    <string name="permission_required_label">الإذن مطلوب</string>
+    <string name="permission_request_message">لكي نشغل الإذاعة، نحتاج الى اذن الإشعارات</string>
+    <string name="request_again">طلب مرة أخرى</string>
+    <string name="no_thanks">لا شكرا</string>
+    <string name="notification_channel_disabled">قناة الإشعرات مغلقة</string>
+    <string name="notification_channel_dialog_message">يجب ان تكون قناة الإشعارات مفعلة قبل ارسال اشعارات</string>
+    <string name="enable">تفعيل</string>
+    <string name="restarting_radio_service">جاري اعادة تشغيل خدمة الإذاعة</string>
+    <string name="radio_service_stopped">توقفت خدمة الإذاعة</string>
 </resources>

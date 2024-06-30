@@ -2,8 +2,13 @@ package com.example.myislam.ui.home
 
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.example.myislam.R
 import com.example.myislam.databinding.ActivityHomeBinding
@@ -23,11 +28,31 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         _binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        adjustLayoutForSystemBars()
 
         defineBottomNavSelectListener()
         binding.bottomNav.selectedItemId = R.id.navigation_quran
+    }
+
+    private fun adjustLayoutForSystemBars() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val windowInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(
+                windowInsets.left,
+                windowInsets.top,
+                windowInsets.right,
+                windowInsets.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+
+        windowInsetsController.isAppearanceLightNavigationBars = false
+        windowInsetsController.isAppearanceLightStatusBars = false
     }
 
     private fun defineBottomNavSelectListener() {

@@ -29,4 +29,13 @@
     <string name="the_play_previous_button">The play previous button</string>
     <string name="an_image_of_a_problem">An image of a problem</string>
     <string name="the_close_button">The close button</string>
+    <string name="permission_required_label">Permission Required</string>
+    <string name="permission_request_message">In order to play the radios, we need the notification permission</string>
+    <string name="request_again">Request again</string>
+    <string name="no_thanks">No thanks</string>
+    <string name="notification_channel_disabled">Notification Channel Disabled</string>
+    <string name="notification_channel_dialog_message">The notifications channel needs to be enabled before sending notifications.</string>
+    <string name="enable">Enable</string>
+    <string name="restarting_radio_service">Restarting Radio Service...</string>
+    <string name="radio_service_stopped">Radio Service Stopped</string>
 </resources>

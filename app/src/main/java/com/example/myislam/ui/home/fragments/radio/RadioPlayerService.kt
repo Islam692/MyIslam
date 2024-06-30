@@ -107,7 +107,7 @@ class RadioPlayerService : Service() {
             notificationHelper.updateNotification(notification)
             startForeground(RADIO_SERVICE_ID, notification)
         } catch (e: Exception) {
-            utils.showShortToast("Error occurred: ${e.message}")
+            Log.d(LOGGING_TAG, "Error occurred: ${e.message}")
         }
     }
 
@@ -131,7 +131,7 @@ class RadioPlayerService : Service() {
         if (isPlaying) {
             mediaPlayer.pause()
             isPlaying = false
-            notificationRemoteView.showPauseButton()
+            notificationRemoteView.showPlayButton()
             radioPlayerCallback?.onPaused(currentRadio)
         } else {
             if (!isMediaPlayerAvailable) {
@@ -141,7 +141,7 @@ class RadioPlayerService : Service() {
 
             mediaPlayer.start()
             isPlaying = true
-            notificationRemoteView.showPlayButton()
+            notificationRemoteView.showPauseButton()
             radioPlayerCallback?.onPlayed(currentRadio)
         }
 
@@ -168,7 +168,6 @@ class RadioPlayerService : Service() {
 
     private fun updateNotificationForLoading() {
         notificationRemoteView.showLoadingProgress()
-        notificationRemoteView.showPauseButton()
         radioPlayerCallback?.onLoading()
         notificationHelper.updateNotification(notification)
     }
@@ -186,7 +185,7 @@ class RadioPlayerService : Service() {
 
                 start()
                 this@RadioPlayerService.isPlaying = true
-                notificationRemoteView.showPlayButton()
+                notificationRemoteView.showPauseButton()
                 notificationHelper.updateNotification(notification)
 
                 if (isPlayingNext) radioPlayerCallback?.onNextPlayed(currentRadio)
@@ -247,7 +246,7 @@ class RadioPlayerService : Service() {
                     name ?: currentRadio.name
                 )
                 this@RadioPlayerService.isPlaying = true
-                notificationRemoteView.showPlayButton()
+                notificationRemoteView.showPauseButton()
                 notificationHelper.updateNotification(notification)
                 start()
                 radioPlayerCallback?.onPlayed(currentRadio)
