@@ -36,4 +36,6 @@
     <string name="notification_channel_disabled">Notification Channel Disabled</string>
     <string name="notification_channel_dialog_message">The notifications channel needs to be enabled before sending notifications.</string>
     <string name="enable">Enable</string>
+    <string name="restarting_radio_service">Restarting Radio Service...</string>
+    <string name="radio_service_stopped">Radio Service Stopped</string>
 </resources>

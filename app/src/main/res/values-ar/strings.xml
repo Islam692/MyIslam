@@ -28,4 +28,6 @@
     <string name="notification_channel_disabled">قناة الإشعرات مغلقة</string>
     <string name="notification_channel_dialog_message">يجب ان تكون قناة الإشعارات مفعلة قبل ارسال اشعارات</string>
     <string name="enable">تفعيل</string>
+    <string name="restarting_radio_service">جاري اعادة تشغيل خدمة الإذاعة</string>
+    <string name="radio_service_stopped">توقفت خدمة الإذاعة</string>
 </resources>

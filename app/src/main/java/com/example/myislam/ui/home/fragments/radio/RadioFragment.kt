@@ -28,8 +28,10 @@ import com.example.myislam.R
 import com.example.myislam.data.radio_api.models.Radio
 import com.example.myislam.databinding.FragmentRadioBinding
 import com.example.myislam.utils.Constants
+import com.example.myislam.utils.Utils
 import com.example.myislam.utils.Utils.Companion.createDialog
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -47,6 +49,9 @@ class RadioFragment : Fragment() {
     private lateinit var notificationChannelDialog: AlertDialog
     private var settingsOpenedToEnableChannel = false
 
+    @Inject
+    lateinit var utils: Utils
+
 
     private val radioPlayerServiceConnection = object : ServiceConnection {
 
@@ -59,12 +64,19 @@ class RadioFragment : Fragment() {
 
         override fun onServiceDisconnected(arg0: ComponentName) {
             isRadioPlayerServiceBound = false
+            serviceStopped = true
+//            // restart service if disconnected
+//            startRadioPlayerService()
         }
     }
 
 
     override fun onStart() {
         super.onStart()
+        startRadioPlayerService()
+    }
+
+    private fun startRadioPlayerService() {
         Intent(requireContext(), RadioPlayerService::class.java).also { intent ->
             requireActivity().startForegroundService(intent)
             requireActivity().bindService(
@@ -128,7 +140,7 @@ class RadioFragment : Fragment() {
     private fun setButtonsClickListeners() {
         binding.btnGrantPermission.setOnClickListener { requestNotificationPermission() }
         binding.btnEnableChannel.setOnClickListener { openSettingsToEnableNotificationChannel() }
-        binding.play.setOnClickListener { toggleRadioPlayer() }
+        binding.playPauseButton.setOnClickListener { toggleRadioPlayer() }
         binding.next.setOnClickListener { playNextRadio() }
         binding.previous.setOnClickListener { playPreviousRadio() }
     }
@@ -188,10 +200,7 @@ class RadioFragment : Fragment() {
                 false
             }
 
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED -> {
+            isPermissionGranted(Manifest.permission.POST_NOTIFICATIONS) -> {
                 initRadioFragment()
                 true
             }
@@ -209,6 +218,13 @@ class RadioFragment : Fragment() {
                 false
             }
         }
+    }
+
+    private fun isPermissionGranted(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestNotificationPermission() {
@@ -248,25 +264,25 @@ class RadioFragment : Fragment() {
             override fun onPlayed(radio: Radio) {
                 showPlayPauseButton()
                 showPauseButton()
-                binding.izaaTv.text = radio.name
+                binding.radioNameTextView.text = radio.name
             }
 
             override fun onPaused(radio: Radio) {
                 showPlayPauseButton()
                 showPlayButton()
-                binding.izaaTv.text = radio.name
+                binding.radioNameTextView.text = radio.name
             }
 
             override fun onNextPlayed(radio: Radio) {
                 showPlayPauseButton()
                 showPauseButton()
-                binding.izaaTv.text = radio.name
+                binding.radioNameTextView.text = radio.name
             }
 
             override fun onPreviousPlayed(radio: Radio) {
                 showPlayPauseButton()
                 showPauseButton()
-                binding.izaaTv.text = radio.name
+                binding.radioNameTextView.text = radio.name
             }
 
             override fun onLoading() {
@@ -275,6 +291,7 @@ class RadioFragment : Fragment() {
 
             override fun onServiceStopped() {
                 serviceStopped = true
+                utils.showShortToast(getString(R.string.radio_service_stopped))
             }
         })
     }
@@ -283,6 +300,7 @@ class RadioFragment : Fragment() {
         if (!handleNotificationPermissionAndChannel()) return
         if (serviceStopped) {
             initRadioService()
+            utils.showShortToast(getString(R.string.restarting_radio_service))
             return
         }
 
@@ -295,47 +313,41 @@ class RadioFragment : Fragment() {
         if (!handleNotificationPermissionAndChannel()) return
         if (serviceStopped) {
             initRadioService()
+            utils.showShortToast(getString(R.string.restarting_radio_service))
             return
         }
 
-        if (isRadioPlayerServiceBound) {
-            radioPlayerService.playPreviousRadio()
-            showLoadingBar()
-            showPauseButton()
-        }
+        if (isRadioPlayerServiceBound) radioPlayerService.playPreviousRadio()
     }
 
     private fun playNextRadio() {
         if (!handleNotificationPermissionAndChannel()) return
         if (serviceStopped) {
             initRadioService()
+            utils.showShortToast(getString(R.string.restarting_radio_service))
             return
         }
 
-        if (isRadioPlayerServiceBound) {
-            radioPlayerService.playNextRadio()
-            showLoadingBar()
-            showPauseButton()
-        }
+        if (isRadioPlayerServiceBound) radioPlayerService.playNextRadio()
     }
 
     private fun showLoadingBar() {
-        binding.play.isVisible = false
+        binding.playPauseButton.isVisible = false
         binding.loadingProgress.isVisible = true
     }
 
     private fun showPlayPauseButton() {
-        binding.play.isVisible = true
+        binding.playPauseButton.isVisible = true
         binding.loadingProgress.isVisible = false
     }
 
     private fun showPlayButton() {
-        binding.play.setImageResource(R.drawable.ic_play_gold)
-        binding.play.scaleType = ImageView.ScaleType.CENTER
+        binding.playPauseButton.setImageResource(R.drawable.ic_play_gold)
+        binding.playPauseButton.scaleType = ImageView.ScaleType.CENTER
     }
 
     private fun showPauseButton() {
-        binding.play.setImageResource(R.drawable.ic_pause)
-        binding.play.scaleType = ImageView.ScaleType.CENTER_CROP
+        binding.playPauseButton.setImageResource(R.drawable.ic_pause)
+        binding.playPauseButton.scaleType = ImageView.ScaleType.CENTER_CROP
     }
 }
